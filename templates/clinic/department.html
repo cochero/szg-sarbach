@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ department.name }} - SZG Sarbach{% endblock %}
+{% block meta_description %}{{ department.description|truncatewords:25 }}{% endblock %}
+
+{% block content %}
+<div class="breadcrumb-area">
+    <div class="container">
+        <h1 class="fw-bold">{{ department.name }}</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item active">{{ department.name }}</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<section class="py-5">
+    <div class="container">
+        {% if department.description %}
+        <div class="row justify-content-center mb-5" data-aos="fade-up">
+            <div class="col-lg-8 text-center">
+                <p class="text-muted">{{ department.description }}</p>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="row g-4">
+            {% for treatment in treatments %}
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}50">
+                <div class="card h-100">
+                    {% if treatment.image %}
+                    <img src="{{ treatment.image.url }}" class="card-img-top" alt="{{ treatment.name }}" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                    <div class="card-img-top bg-primary-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                        <i class="fas fa-spa fa-3x text-primary"></i>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ treatment.name }}</h5>
+                        <p class="card-text small text-muted">{{ treatment.short_description|truncatewords:20 }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-primary fw-bold">CHF {{ treatment.price }}</span>
+                            <span class="badge bg-primary-light text-primary">{{ treatment.duration_days }} days</span>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-white border-0 d-flex gap-2">
+                        <a href="{% url 'treatment_detail' treatment.slug %}" class="btn btn-outline-primary btn-sm flex-fill">Details</a>
+                        <a href="{% url 'appointment' %}" class="btn btn-primary btn-sm flex-fill">Book</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <i class="fas fa-info-circle fa-3x text-muted mb-3"></i>
+                <p class="text-muted">No treatments available in this department yet.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,322 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>{% block title %}SZG Sarbach Gesundheitszentrum Leukerbad{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}SZG Sarbach Gesundheitszentrum in Leukerbad, Schweiz. Ayurveda, Naturheilkunde, Physiotherapie und ganzheitliche Gesundheitsbehandlungen. EMR & ASCA anerkannt.{% endblock %}">
+    <meta name="keywords" content="Gesundheitszentrum Leukerbad, Ayurveda Schweiz, Naturheilkunde, Physiotherapie, SZG Sarbach, Kur Leukerbad, Wellness Wallis">
+    <meta name="author" content="SZG Sarbach Health Centre">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="{% block og_title %}SZG Sarbach Gesundheitszentrum Leukerbad{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Ganzheitliche Gesundheitsbehandlungen in Leukerbad, Schweiz{% endblock %}">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="de_CH">
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+    <link rel="alternate" hreflang="de" href="{{ request.build_absolute_uri }}">
+    <link rel="alternate" hreflang="x-default" href="{{ request.build_absolute_uri }}">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "MedicalBusiness",
+        "name": "{{ site_settings.site_name|default:'SZG Sarbach Gesundheitszentrum' }}",
+        "alternateName": "SZG Sarbach Health Centre",
+        "url": "{{ request.scheme }}://{{ request.get_host }}",
+        "telephone": "{{ site_settings.site_phone|default:'+41 79 290 77 44' }}",
+        "email": "{{ site_settings.site_email|default:'help@sarbach.swiss' }}",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Dorfstrasse 23",
+            "addressLocality": "Leukerbad",
+            "addressRegion": "Wallis",
+            "postalCode": "3954",
+            "addressCountry": "CH"
+        },
+        "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 46.3793,
+            "longitude": 7.6282
+        },
+        "openingHours": "Mo-Sa 08:00-18:00",
+        "priceRange": "$$",
+        "medicalSpecialty": ["Ayurveda", "Naturopathy", "Physiotherapy", "Complementary Medicine"],
+        "sameAs": [],
+        "areaServed": [
+            {"@type": "Country", "name": "Switzerland"},
+            {"@type": "Country", "name": "Germany"},
+            {"@type": "Country", "name": "Austria"}
+        ]
+    }
+    </script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    {% block extra_css %}{% endblock %}
+    <style>
+        :root {
+            --primary: #6cb444;
+            --primary-dark: #5a9a38;
+            --primary-light: #e8f5e0;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .btn-primary, .bg-primary { background-color: var(--primary) !important; border-color: var(--primary) !important; }
+        .btn-primary:hover { background-color: var(--primary-dark) !important; border-color: var(--primary-dark) !important; }
+        .btn-outline-primary { color: var(--primary) !important; border-color: var(--primary) !important; }
+        .btn-outline-primary:hover { background-color: var(--primary) !important; color: #fff !important; }
+        .text-primary { color: var(--primary) !important; }
+        .bg-primary-light { background-color: var(--primary-light) !important; }
+        .top-bar { background-color: var(--primary); color: #fff; font-size: 0.85rem; padding: 6px 0; }
+        .top-bar a { color: #fff; text-decoration: none; }
+        .top-bar a:hover { text-decoration: underline; }
+        .navbar-brand img { max-height: 50px; }
+        .nav-link { font-weight: 500; }
+        .nav-link:hover, .nav-link.active { color: var(--primary) !important; }
+        .dropdown-item:hover { background-color: var(--primary-light); color: var(--primary); }
+        .card { border: none; box-shadow: 0 2px 15px rgba(0,0,0,0.08); transition: transform 0.3s; }
+        .card:hover { transform: translateY(-5px); }
+        .section-title { position: relative; margin-bottom: 2rem; }
+        .section-title::after { content: ''; display: block; width: 60px; height: 3px; background: var(--primary); margin-top: 10px; }
+        .section-title.text-center::after { margin-left: auto; margin-right: auto; }
+        footer { background-color: #1a1a2e; color: #ccc; }
+        footer a { color: #aaa; text-decoration: none; }
+        footer a:hover { color: var(--primary); }
+        footer h5 { color: #fff; border-bottom: 2px solid var(--primary); padding-bottom: 8px; display: inline-block; }
+        .breadcrumb-area { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); padding: 60px 0 40px; color: #fff; }
+        .breadcrumb-area .breadcrumb-item a { color: rgba(255,255,255,0.8); }
+        .breadcrumb-area .breadcrumb-item.active { color: #fff; }
+        .breadcrumb-item+.breadcrumb-item::before { color: rgba(255,255,255,0.6); }
+        .goog-te-banner-frame { display: none !important; }
+        body { top: 0 !important; }
+        .goog-te-gadget .goog-te-combo { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.5); border-radius: 4px; padding: 3px 8px; font-size: 0.8rem; cursor: pointer; outline: none; }
+        .goog-te-gadget .goog-te-combo option { color: #333; background: #fff; }
+        .goog-te-gadget { font-size: 0 !important; color: transparent !important; }
+        .goog-te-gadget span { display: none; }
+        .lang-switcher { display: flex; align-items: center; gap: 6px; }
+        .lang-switcher .lang-label { color: #fff; font-size: 0.8rem; white-space: nowrap; }
+        .lang-switcher .fa-globe { color: #fff; }
+        .insurance-bar { background-color: var(--primary-light); font-size: 0.8rem; padding: 4px 0; text-align: center; color: #555; }
+        .badge-status { font-size: 0.75rem; }
+    </style>
+</head>
+<body>
+<div class="insurance-bar">
+    <div class="container">
+        <i class="fas fa-shield-alt text-primary me-1"></i> EMR, ASCA, EGK & Krankenkassen anerkannt | Complementary Insurance recognized
+    </div>
+</div>
+
+<div class="top-bar">
+    <div class="container d-flex justify-content-between align-items-center flex-wrap">
+        <div class="d-flex align-items-center gap-3">
+            <span><i class="fas fa-phone me-1"></i> {{ site_settings.site_phone|default:"+41 79 290 77 44" }}</span>
+            <a href="https://wa.me/41792907744" target="_blank" class="d-none d-md-inline"><i class="fab fa-whatsapp me-1"></i> WhatsApp</a>
+            <span class="d-none d-md-inline"><i class="fas fa-envelope me-1"></i> {{ site_settings.site_email|default:"help@sarbach.swiss" }}</span>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+            <div class="lang-switcher">
+                <i class="fas fa-globe"></i>
+                <div id="google_translate_element"></div>
+            </div>
+            {% if user.is_authenticated %}
+                <a href="{% url 'user_dashboard' %}"><i class="fas fa-tachometer-alt me-1"></i> Dashboard</a>
+                <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt me-1"></i> Logout</a>
+            {% else %}
+                <a href="{% url 'register' %}"><i class="fas fa-sign-in-alt me-1"></i> Login / Register</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'home' %}">
+            <img src="{% static 'img/logo.png' %}" alt="SZG Sarbach Gesundheitszentrum" style="height: 50px;">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Health Center</a>
+                    <ul class="dropdown-menu">
+                        {% for dept in nav_departments %}
+                        <li><a class="dropdown-item" href="{% url 'department_list' dept.slug %}">{{ dept.name }}</a></li>
+                        {% endfor %}
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{% url 'doctor_profile' %}"><i class="fas fa-user-md me-2"></i>Our Doctors</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'accommodations' %}">Accommodations</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'blogs' %}">Blog</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'events' %}">Events</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">Contact</a></li>
+                {% if user.is_authenticated %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'cart' %}"><i class="fas fa-shopping-cart"></i></a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+{% if messages %}
+<div class="container mt-3">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% block content %}{% endblock %}
+
+<footer class="pt-5 pb-3 mt-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+                <h5>SZG Sarbach</h5>
+                <p class="small">Gesundheitszentrum für ganzheitliche Medizin in Leukerbad, Schweiz.</p>
+                <ul class="list-unstyled small">
+                    <li><i class="fas fa-certificate text-primary me-2"></i>EMR Nr: {{ site_settings.emr_nr|default:"26054" }}</li>
+                    <li><i class="fas fa-certificate text-primary me-2"></i>ZSR Nr: {{ site_settings.zsr_nr|default:"B494360" }}</li>
+                    <li><i class="fas fa-certificate text-primary me-2"></i>ASCA: {{ site_settings.asca_id|default:"106773" }}</li>
+                    <li><i class="fas fa-certificate text-primary me-2"></i>EGK Nr: {{ site_settings.egk_nr|default:"42736" }}</li>
+                    <li><i class="fas fa-certificate text-primary me-2"></i>GLN: {{ site_settings.gln_nr|default:"7601002563383" }}</li>
+                </ul>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <h5>Contact</h5>
+                <ul class="list-unstyled small">
+                    <li class="mb-2"><i class="fas fa-map-marker-alt text-primary me-2"></i>{{ site_settings.site_address|default:"Dorfstrasse 23, CH-3954 Leukerbad" }}</li>
+                    <li class="mb-2"><i class="fas fa-phone text-primary me-2"></i>{{ site_settings.site_phone|default:"+41 79 290 77 44" }}</li>
+                    <li class="mb-2"><i class="fas fa-envelope text-primary me-2"></i>{{ site_settings.site_email|default:"help@sarbach.swiss" }}</li>
+                </ul>
+                <div class="d-flex gap-3 mt-3">
+                    <a href="https://wa.me/41792907744?text=Hello%2C%20I%20would%20like%20more%20information%20about%20SZG%20Sarbach." target="_blank" style="color: #25D366;" title="WhatsApp"><i class="fab fa-whatsapp fa-lg"></i></a>
+                    <a href="{{ site_settings.facebook_url|default:'#' }}"><i class="fab fa-facebook fa-lg"></i></a>
+                    <a href="{{ site_settings.instagram_url|default:'#' }}"><i class="fab fa-instagram fa-lg"></i></a>
+                    <a href="{{ site_settings.twitter_url|default:'#' }}"><i class="fab fa-twitter fa-lg"></i></a>
+                    <a href="{{ site_settings.linkedin_url|default:'#' }}"><i class="fab fa-linkedin fa-lg"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <h5>Treatments</h5>
+                <ul class="list-unstyled small">
+                    {% for t in featured_treatments %}
+                    <li class="mb-1"><a href="{% url 'treatment_detail' t.slug %}"><i class="fas fa-chevron-right me-1 small"></i>{{ t.name }}</a></li>
+                    {% empty %}
+                    <li><a href="{% url 'home' %}">View all treatments</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <h5>Quick Links</h5>
+                <ul class="list-unstyled small">
+                    <li class="mb-1"><a href="{% url 'about' %}"><i class="fas fa-chevron-right me-1 small"></i>About Us</a></li>
+                    <li class="mb-1"><a href="{% url 'doctor_profile' %}"><i class="fas fa-chevron-right me-1 small"></i>Our Doctors</a></li>
+                    <li class="mb-1"><a href="{% url 'accommodations' %}"><i class="fas fa-chevron-right me-1 small"></i>Accommodations</a></li>
+                    <li class="mb-1"><a href="{% url 'appointment' %}"><i class="fas fa-chevron-right me-1 small"></i>Book Appointment</a></li>
+                    <li class="mb-1"><a href="{% url 'blogs' %}"><i class="fas fa-chevron-right me-1 small"></i>Blog</a></li>
+                    <li class="mb-1"><a href="{% url 'privacy' %}"><i class="fas fa-chevron-right me-1 small"></i>Privacy Policy</a></li>
+                    <li class="mb-1"><a href="{% url 'terms' %}"><i class="fas fa-chevron-right me-1 small"></i>Terms & Conditions</a></li>
+                </ul>
+            </div>
+        </div>
+        <hr class="my-4" style="border-color: #333;">
+        <div class="row align-items-center">
+            <div class="col-md-6 text-center text-md-start">
+                <p class="small mb-0">&copy; {% now "Y" %} SZG Sarbach Gesundheitszentrum. All rights reserved.</p>
+            </div>
+            <div class="col-md-6 text-center text-md-end">
+                <a href="{% url 'doctor_login_page' %}" class="small me-3">Doctor Login</a>
+                <a href="{% url 'admin_login_page' %}" class="small">Staff Login</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init({ duration: 800, once: true });
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+    $.ajaxSetup({ beforeSend: function(xhr, settings) {
+        if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }});
+</script>
+
+<script type="text/javascript">
+function googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+        pageLanguage: 'de',
+        includedLanguages: 'de,en,fr,it,ru',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+        autoDisplay: false
+    }, 'google_translate_element');
+}
+</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<a href="https://wa.me/41792907744?text=Hello%2C%20I%20would%20like%20to%20know%20more%20about%20SZG%20Sarbach%20Gesundheitszentrum." target="_blank" class="whatsapp-float" aria-label="Chat on WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+</a>
+<style>
+    .whatsapp-float {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 60px;
+        height: 60px;
+        background-color: #25D366;
+        color: #fff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+        z-index: 9999;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+    .whatsapp-float:hover {
+        background-color: #20ba5a;
+        color: #fff;
+        transform: scale(1.1);
+        box-shadow: 0 6px 20px rgba(37, 211, 102, 0.6);
+    }
+    @media (max-width: 576px) {
+        .whatsapp-float { width: 50px; height: 50px; font-size: 26px; bottom: 20px; right: 20px; }
+    }
+</style>
+
+{% block extra_js %}{% endblock %}
+</body>
+</html>

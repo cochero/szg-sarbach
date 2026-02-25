@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Book Appointment - SZG Sarbach{% endblock %}
+
+{% block content %}
+<div class="breadcrumb-area">
+    <div class="container">
+        <h1 class="fw-bold">Book an Appointment</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item active">Appointment</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8" data-aos="fade-up">
+                <div class="card p-4 p-lg-5">
+                    <h4 class="section-title"><i class="fas fa-calendar-plus text-primary me-2"></i>Appointment Details</h4>
+                    <form id="appointmentForm">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Department *</label>
+                                <select class="form-select" name="app_dept" id="appDept" required>
+                                    <option value="">Select Department</option>
+                                    {% for dept in departments %}
+                                    <option value="{{ dept.id }}">{{ dept.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Treatment *</label>
+                                <select class="form-select" name="app_treat" id="appTreat" required>
+                                    <option value="">Select Treatment</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Appointment Date *</label>
+                                <input type="date" class="form-control" name="app_date" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Preferred Time</label>
+                                <input type="time" class="form-control" name="app_time">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">City</label>
+                                <select class="form-select" name="app_city" id="appCity">
+                                    <option value="">Select City</option>
+                                    {% for city in cities %}
+                                    <option value="{{ city.id }}">{{ city.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Location</label>
+                                <select class="form-select" name="app_location" id="appLocation">
+                                    <option value="">Select Location</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Appointment Type</label>
+                                <select class="form-select" name="app_type">
+                                    <option value="Walkin">Walk-in</option>
+                                    <option value="Telephonic">Telephonic</option>
+                                    <option value="Online">Online</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Amount (CHF)</label>
+                                <input type="number" class="form-control" name="app_amt" id="appAmt" step="0.01" readonly>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Description / Notes</label>
+                                <textarea class="form-control" name="app_desc" rows="3"></textarea>
+                            </div>
+                            <input type="hidden" name="app_payment" value="Pending">
+                            <input type="hidden" name="app_status" value="Pending">
+                            <input type="hidden" name="app_created" value="Patient">
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary btn-lg" id="appBtn">
+                                    <i class="fas fa-calendar-check me-2"></i>Book Appointment
+                                </button>
+                            </div>
+                        </div>
+                        <div id="appMsg" class="mt-3" style="display:none;"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$('#appDept').on('change', function() {
+    var deptId = $(this).val();
+    if (deptId) {
+        $.ajax({
+            url: "{% url 'ajax_treatments' %}",
+            type: 'POST',
+            data: { dept: deptId },
+            success: function(res) {
+                $('#appTreat').html('<option value="">Select Treatment</option>' + res.html);
+            }
+        });
+    } else {
+        $('#appTreat').html('<option value="">Select Treatment</option>');
+    }
+});
+
+$('#appCity').on('change', function() {
+    var cityId = $(this).val();
+    if (cityId) {
+        $.ajax({
+            url: "{% url 'ajax_locations' %}",
+            type: 'POST',
+            data: { p: cityId },
+            success: function(res) {
+                $('#appLocation').html('<option value="">Select Location</option>' + res.html);
+            }
+        });
+    } else {
+        $('#appLocation').html('<option value="">Select Location</option>');
+    }
+});
+
+$('#appTreat').on('change', function() {
+    var selected = $(this).find('option:selected').text();
+    var match = selected.match(/CHF\s*([\d.]+)/);
+    if (match) {
+        $('#appAmt').val(match[1]);
+    }
+});
+
+$('#appointmentForm').on('submit', function(e) {
+    e.preventDefault();
+    var btn = $('#appBtn');
+    btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i>Booking...');
+    $.ajax({
+        url: "{% url 'appointment_submit' %}",
+        type: 'POST',
+        data: $(this).serialize(),
+        success: function(res) {
+            if (res.success) {
+                $('#appMsg').html('<div class="alert alert-success"><i class="fas fa-check-circle me-2"></i>Appointment booked successfully! ID: #' + res.id + '</div>').show();
+                $('#appointmentForm')[0].reset();
+            } else {
+                $('#appMsg').html('<div class="alert alert-danger">' + res.message + '</div>').show();
+            }
+            btn.prop('disabled', false).html('<i class="fas fa-calendar-check me-2"></i>Book Appointment');
+        },
+        error: function() {
+            $('#appMsg').html('<div class="alert alert-danger">An error occurred. Please try again.</div>').show();
+            btn.prop('disabled', false).html('<i class="fas fa-calendar-check me-2"></i>Book Appointment');
+        }
+    });
+});
+</script>
+{% endblock %}

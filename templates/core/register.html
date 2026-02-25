@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Login / Register - SZG Sarbach{% endblock %}
+
+{% block content %}
+<div class="breadcrumb-area">
+    <div class="container">
+        <h1 class="fw-bold">Patient Portal</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item active">Login / Register</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center g-4">
+            <div class="col-lg-5 col-md-6" data-aos="fade-right">
+                <div class="card p-4">
+                    <h4 class="text-center mb-4"><i class="fas fa-sign-in-alt text-primary me-2"></i>Patient Login</h4>
+                    <form id="loginForm">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control" name="password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100" id="loginBtn">Login</button>
+                        <div id="loginMsg" class="mt-3" style="display:none;"></div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-5 col-md-6" data-aos="fade-left">
+                <div class="card p-4">
+                    <h4 class="text-center mb-4"><i class="fas fa-user-plus text-primary me-2"></i>Register</h4>
+                    <form id="registerForm">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <label class="form-label">Family Name</label>
+                                <input type="text" class="form-control" name="fname" required>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">Given Name</label>
+                                <input type="text" class="form-control" name="givenname" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" name="email" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Password</label>
+                                <input type="password" class="form-control" name="password" required minlength="6">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">Mobile</label>
+                                <input type="text" class="form-control" name="mobile">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">Gender</label>
+                                <select class="form-select" name="gender">
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Age</label>
+                                <input type="number" class="form-control" name="age" min="1" max="120">
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary w-100" id="regBtn">Register</button>
+                            </div>
+                        </div>
+                        <div id="regMsg" class="mt-3" style="display:none;"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$('#loginForm').on('submit', function(e) {
+    e.preventDefault();
+    var btn = $('#loginBtn');
+    btn.prop('disabled', true).text('Logging in...');
+    $.ajax({
+        url: "{% url 'patient_login' %}",
+        type: 'POST',
+        data: $(this).serialize(),
+        success: function(res) {
+            if (res.success) {
+                window.location.href = "{% url 'user_dashboard' %}";
+            } else {
+                $('#loginMsg').html('<div class="alert alert-danger">' + res.message + '</div>').show();
+            }
+            btn.prop('disabled', false).text('Login');
+        },
+        error: function() {
+            $('#loginMsg').html('<div class="alert alert-danger">An error occurred.</div>').show();
+            btn.prop('disabled', false).text('Login');
+        }
+    });
+});
+
+$('#registerForm').on('submit', function(e) {
+    e.preventDefault();
+    var btn = $('#regBtn');
+    btn.prop('disabled', true).text('Registering...');
+    $.ajax({
+        url: "{% url 'patient_register' %}",
+        type: 'POST',
+        data: $(this).serialize(),
+        success: function(res) {
+            if (res.success) {
+                $('#regMsg').html('<div class="alert alert-success">Registration successful! You can now login.</div>').show();
+                $('#registerForm')[0].reset();
+            } else {
+                $('#regMsg').html('<div class="alert alert-danger">' + res.message + '</div>').show();
+            }
+            btn.prop('disabled', false).text('Register');
+        },
+        error: function() {
+            $('#regMsg').html('<div class="alert alert-danger">An error occurred.</div>').show();
+            btn.prop('disabled', false).text('Register');
+        }
+    });
+});
+</script>
+{% endblock %}

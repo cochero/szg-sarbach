@@ -1,0 +1,189 @@
+{% extends 'admin_panel/base_admin.html' %}
+
+{% block title %}Treatments{% endblock %}
+{% block page_title %}Treatments{% endblock %}
+
+{% block admin_content %}
+<div class="card">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="fas fa-briefcase-medical me-2"></i>Treatments</h5>
+        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addTreatmentModal">
+            <i class="fas fa-plus me-1"></i> Add Treatment
+        </button>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Department</th>
+                        <th>Price</th>
+                        <th>Days</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for t in treatments %}
+                    <tr id="treat-row-{{ t.id }}">
+                        <td>{{ forloop.counter }}</td>
+                        <td>{% if t.image %}<img src="{{ t.image.url }}" width="40" height="40" class="rounded" style="object-fit:cover;">{% else %}-{% endif %}</td>
+                        <td><strong>{{ t.name }}</strong></td>
+                        <td>{{ t.department.name|default:"-" }}</td>
+                        <td>CHF {{ t.price }}</td>
+                        <td>{{ t.duration_days }}</td>
+                        <td>
+                            <span class="badge {% if t.is_active %}badge-active{% else %}badge-inactive{% endif %}">
+                                {{ t.is_active|yesno:"Active,Inactive" }}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary" onclick="editTreatment({{ t.id }}, '{{ t.name|escapejs }}', '{{ t.department_id|default:"" }}', '{{ t.description|escapejs }}', '{{ t.price }}', '{{ t.duration_days }}')"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-sm btn-outline-success toggle-btn" onclick="toggleTreatment({{ t.id }}, '{% if t.is_active %}Disable{% else %}Enable{% endif %}')">
+                                <i class="fas fa-{% if t.is_active %}toggle-on{% else %}toggle-off{% endif %}"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteTreatment({{ t.id }})"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="8" class="text-center text-muted py-4">No treatments found</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addTreatmentModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="POST" action="{% url 'admin_treatment_submit' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-plus me-2"></i>Add Treatment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Name</label>
+                            <input type="text" class="form-control" name="t_name" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Department</label>
+                            <select class="form-select" name="t_dep">
+                                <option value="">-- Select --</option>
+                                {% for dept in departments %}
+                                <option value="{{ dept.id }}">{{ dept.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Price (CHF)</label>
+                            <input type="number" step="0.01" class="form-control" name="t_price" value="0">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Duration (Days)</label>
+                            <input type="number" class="form-control" name="t_days" value="1">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Image</label>
+                            <input type="file" class="form-control" name="t_img" accept="image/*">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" name="t_desc" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Treatment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editTreatmentModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="POST" action="{% url 'admin_treatment_update' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="t_id" id="edit_t_id">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-edit me-2"></i>Edit Treatment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Name</label>
+                            <input type="text" class="form-control" name="t_name" id="edit_t_name" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Department</label>
+                            <select class="form-select" name="t_dep" id="edit_t_dep">
+                                <option value="">-- Select --</option>
+                                {% for dept in departments %}
+                                <option value="{{ dept.id }}">{{ dept.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Price (CHF)</label>
+                            <input type="number" step="0.01" class="form-control" name="t_price" id="edit_t_price">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Duration (Days)</label>
+                            <input type="number" class="form-control" name="t_days" id="edit_t_days">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Image</label>
+                            <input type="file" class="form-control" name="t_img" accept="image/*">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" name="t_desc" id="edit_t_desc" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Treatment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function editTreatment(id, name, dep, desc, price, days) {
+    document.getElementById('edit_t_id').value = id;
+    document.getElementById('edit_t_name').value = name;
+    document.getElementById('edit_t_dep').value = dep;
+    document.getElementById('edit_t_desc').value = desc;
+    document.getElementById('edit_t_price').value = price;
+    document.getElementById('edit_t_days').value = days;
+    new bootstrap.Modal(document.getElementById('editTreatmentModal')).show();
+}
+function toggleTreatment(id, st) {
+    fetch("{% url 'admin_treatment_toggle' %}", {
+        method: 'POST', headers: {'X-CSRFToken': csrftoken, 'Content-Type': 'application/x-www-form-urlencoded'},
+        body: 'id=' + id + '&st=' + st
+    }).then(r => r.json()).then(d => { if(d.success) location.reload(); });
+}
+function deleteTreatment(id) {
+    if(!confirm('Are you sure?')) return;
+    fetch("{% url 'admin_treatment_delete' %}", {
+        method: 'POST', headers: {'X-CSRFToken': csrftoken, 'Content-Type': 'application/x-www-form-urlencoded'},
+        body: 'id=' + id
+    }).then(r => r.json()).then(d => { if(d.success) document.getElementById('treat-row-' + id).remove(); });
+}
+</script>
+{% endblock %}

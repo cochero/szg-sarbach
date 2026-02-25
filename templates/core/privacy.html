@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Privacy Policy - SZG Sarbach{% endblock %}
+{% block meta_description %}Privacy policy of SZG Sarbach Gesundheitszentrum Leukerbad.{% endblock %}
+
+{% block content %}
+<div class="breadcrumb-area">
+    <div class="container">
+        <h1 class="fw-bold">Privacy Policy</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item active">Privacy Policy</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8" data-aos="fade-up">
+                <div class="card p-4 p-lg-5">
+                    <h3 class="section-title">Datenschutzerklärung / Privacy Policy</h3>
+
+                    <h5 class="mt-4">1. Data Controller</h5>
+                    <p>SZG Sarbach Gesundheitszentrum<br>Dorfstrasse 19, CH-3954 Leukerbad<br>Email: {{ site_settings.site_email|default:"help@sarbach.swiss" }}<br>Phone: {{ site_settings.site_phone|default:"+41 79 290 77 44" }}</p>
+
+                    <h5 class="mt-4">2. Data Collection</h5>
+                    <p>We collect personal data when you register on our website, book an appointment, make a purchase, or contact us. This may include your name, email, phone number, address, medical information, and insurance details.</p>
+
+                    <h5 class="mt-4">3. Purpose of Data Processing</h5>
+                    <p>Your personal data is processed for the following purposes:</p>
+                    <ul>
+                        <li>Providing medical and therapeutic services</li>
+                        <li>Managing appointments and bookings</li>
+                        <li>Processing payments and orders</li>
+                        <li>Communicating with you regarding your treatments</li>
+                        <li>Insurance billing and coordination</li>
+                    </ul>
+
+                    <h5 class="mt-4">4. Data Security</h5>
+                    <p>We implement appropriate technical and organizational measures to protect your personal data against unauthorized access, loss, or alteration. Medical data is handled in accordance with Swiss data protection laws and medical confidentiality regulations.</p>
+
+                    <h5 class="mt-4">5. Data Sharing</h5>
+                    <p>We do not sell or share your personal data with third parties except as necessary for providing our services (e.g., insurance providers, laboratory services) or as required by law.</p>
+
+                    <h5 class="mt-4">6. Your Rights</h5>
+                    <p>Under Swiss data protection law (DSG/nDSG), you have the right to access, correct, or request deletion of your personal data. Contact us at {{ site_settings.site_email|default:"help@sarbach.swiss" }} for any data-related requests.</p>
+
+                    <h5 class="mt-4">7. Cookies</h5>
+                    <p>Our website uses cookies for functionality and analytics purposes. You can control cookie settings through your browser preferences.</p>
+
+                    <p class="text-muted small mt-4">Last updated: {% now "F Y" %}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

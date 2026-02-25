@@ -1,0 +1,213 @@
+{% extends 'admin_panel/base_admin.html' %}
+
+{% block title %}Hotels/Apartments{% endblock %}
+{% block page_title %}Hotels/Apartments{% endblock %}
+
+{% block admin_content %}
+<div class="card">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="fas fa-hotel me-2"></i>Hotels & Apartments</h5>
+        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addHotelModal">
+            <i class="fas fa-plus me-1"></i> Add
+        </button>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>City</th>
+                        <th>Phone</th>
+                        <th>Rates</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for h in hotels %}
+                    <tr id="hotel-row-{{ h.id }}">
+                        <td>{{ forloop.counter }}</td>
+                        <td><img src="{{ h.image.url }}" width="50" height="40" class="rounded" style="object-fit:cover;"></td>
+                        <td><strong>{{ h.name }}</strong></td>
+                        <td><span class="badge bg-info">{{ h.hotel_type }}</span></td>
+                        <td>{{ h.city.name|default:"-" }}</td>
+                        <td>{{ h.phone|default:"-" }}</td>
+                        <td>{{ h.rates|default:"-" }}</td>
+                        <td>
+                            <span class="badge {% if h.is_active %}badge-active{% else %}badge-inactive{% endif %}">
+                                {{ h.is_active|yesno:"Active,Inactive" }}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary" onclick="editHotel({{ h.id }}, '{{ h.name|escapejs }}', '{{ h.city_id|default:"" }}', '{{ h.address|escapejs }}', '{{ h.hotel_type }}', '{{ h.phone|escapejs }}', '{{ h.rates|escapejs }}', '{{ h.description|escapejs }}')"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-sm btn-outline-success" onclick="toggleHotel({{ h.id }}, '{% if h.is_active %}Disable{% else %}Enable{% endif %}')"><i class="fas fa-{% if h.is_active %}toggle-on{% else %}toggle-off{% endif %}"></i></button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteHotel({{ h.id }})"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="9" class="text-center text-muted py-4">No hotels/apartments found</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addHotelModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="POST" action="{% url 'admin_hotel_submit' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-plus me-2"></i>Add Hotel/Apartment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Name</label>
+                            <input type="text" class="form-control" name="h_name" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Type</label>
+                            <select class="form-select" name="h_type">
+                                <option value="Hotel">Hotel</option>
+                                <option value="Apartment">Apartment</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">City</label>
+                            <select class="form-select" name="h_city">
+                                <option value="">-- Select --</option>
+                                {% for c in cities %}
+                                <option value="{{ c.id }}">{{ c.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Phone</label>
+                            <input type="text" class="form-control" name="h_phn">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Rates</label>
+                            <input type="text" class="form-control" name="h_rates">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Image</label>
+                            <input type="file" class="form-control" name="h_img" accept="image/*">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Address</label>
+                            <textarea class="form-control" name="h_add" rows="2"></textarea>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" name="h_des" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editHotelModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="POST" action="{% url 'admin_hotel_update' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="h_id" id="edit_h_id">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-edit me-2"></i>Edit Hotel/Apartment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Name</label>
+                            <input type="text" class="form-control" name="h_name" id="edit_h_name" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Type</label>
+                            <select class="form-select" name="h_type" id="edit_h_type">
+                                <option value="Hotel">Hotel</option>
+                                <option value="Apartment">Apartment</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">City</label>
+                            <select class="form-select" name="h_city" id="edit_h_city">
+                                <option value="">-- Select --</option>
+                                {% for c in cities %}
+                                <option value="{{ c.id }}">{{ c.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Phone</label>
+                            <input type="text" class="form-control" name="h_phn" id="edit_h_phn">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Rates</label>
+                            <input type="text" class="form-control" name="h_rates" id="edit_h_rates">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Image</label>
+                            <input type="file" class="form-control" name="h_img" accept="image/*">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Address</label>
+                            <textarea class="form-control" name="h_add" id="edit_h_add" rows="2"></textarea>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" name="h_des" id="edit_h_des" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function editHotel(id, name, city, address, type, phone, rates, desc) {
+    document.getElementById('edit_h_id').value = id;
+    document.getElementById('edit_h_name').value = name;
+    document.getElementById('edit_h_city').value = city;
+    document.getElementById('edit_h_add').value = address;
+    document.getElementById('edit_h_type').value = type;
+    document.getElementById('edit_h_phn').value = phone;
+    document.getElementById('edit_h_rates').value = rates;
+    document.getElementById('edit_h_des').value = desc;
+    new bootstrap.Modal(document.getElementById('editHotelModal')).show();
+}
+function toggleHotel(id, st) {
+    fetch("{% url 'admin_hotel_toggle' %}", {
+        method: 'POST', headers: {'X-CSRFToken': csrftoken, 'Content-Type': 'application/x-www-form-urlencoded'},
+        body: 'id=' + id + '&st=' + st
+    }).then(r => r.json()).then(d => { if(d.success) location.reload(); });
+}
+function deleteHotel(id) {
+    if(!confirm('Are you sure?')) return;
+    fetch("{% url 'admin_hotel_delete' %}", {
+        method: 'POST', headers: {'X-CSRFToken': csrftoken, 'Content-Type': 'application/x-www-form-urlencoded'},
+        body: 'id=' + id
+    }).then(r => r.json()).then(d => { if(d.success) document.getElementById('hotel-row-' + id).remove(); });
+}
+</script>
+{% endblock %}

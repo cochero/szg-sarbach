@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Our Doctors - SZG Sarbach{% endblock %}
+{% block meta_description %}Meet our experienced doctors and health practitioners at SZG Sarbach Gesundheitszentrum Leukerbad.{% endblock %}
+
+{% block content %}
+<div class="breadcrumb-area">
+    <div class="container">
+        <h1 class="fw-bold">Our Doctors</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item active">Doctors</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            {% for doctor in doctors %}
+            <div class="col-lg-3 col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}50">
+                <div class="card h-100 text-center">
+                    {% if doctor.image %}
+                    <img src="{{ doctor.image.url }}" class="card-img-top" alt="{{ doctor.name }}" style="height: 280px; object-fit: cover;">
+                    {% else %}
+                    <div class="card-img-top bg-primary-light d-flex align-items-center justify-content-center" style="height: 280px;">
+                        <i class="fas fa-user-md fa-4x text-primary"></i>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">{{ doctor.name }}</h5>
+                        <p class="text-muted small mb-1">{{ doctor.qualification }}</p>
+                        <p class="fw-bold small mb-1">{{ doctor.specialization }}</p>
+                        {% if doctor.department %}
+                        <span class="badge bg-primary-light text-primary">{{ doctor.department.name }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer bg-white border-0">
+                        {% if doctor.email %}
+                        <a href="mailto:{{ doctor.email }}" class="btn btn-outline-primary btn-sm w-100"><i class="fas fa-envelope me-1"></i>Contact</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <i class="fas fa-user-md fa-3x text-muted mb-3"></i>
+                <p class="text-muted">Doctor profiles coming soon.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

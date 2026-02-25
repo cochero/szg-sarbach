@@ -1,0 +1,16 @@
+[Unit]
+Description=SZG Sarbach Django Application
+After=network.target mysql.service
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/szg_sarbach
+EnvironmentFile=/var/www/szg_sarbach/.env
+Environment=DJANGO_SETTINGS_MODULE=szg_sarbach.settings_production
+ExecStart=/var/www/szg_sarbach/venv/bin/gunicorn --config /var/www/szg_sarbach/gunicorn.conf.py szg_sarbach.wsgi:application
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

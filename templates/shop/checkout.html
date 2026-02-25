@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Checkout - SZG Sarbach{% endblock %}
+
+{% block content %}
+<div class="breadcrumb-area">
+    <div class="container">
+        <h1 class="fw-bold">Checkout</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'cart' %}">Cart</a></li>
+                <li class="breadcrumb-item active">Checkout</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<section class="py-5">
+    <div class="container">
+        <form method="post" action="{% url 'checkout_submit' %}">
+            {% csrf_token %}
+            <div class="row g-5">
+                <div class="col-lg-7" data-aos="fade-right">
+                    <h4 class="section-title"><i class="fas fa-user text-primary me-2"></i>Billing Details</h4>
+                    <div class="card p-4">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">First Name *</label>
+                                <input type="text" class="form-control" name="fname" value="{{ user.first_name }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Last Name *</label>
+                                <input type="text" class="form-control" name="lname" value="{{ user.last_name }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Email *</label>
+                                <input type="email" class="form-control" name="bemail" value="{{ user.email }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Phone *</label>
+                                <input type="text" class="form-control" name="bphone" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Address *</label>
+                                <textarea class="form-control" name="baddress" rows="2" required></textarea>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Town / City *</label>
+                                <input type="text" class="form-control" name="btown" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">ZIP Code *</label>
+                                <input type="text" class="form-control" name="bzipcode" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Country *</label>
+                                <input type="text" class="form-control" name="bcountry" value="Switzerland" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4 class="section-title mt-4"><i class="fas fa-credit-card text-primary me-2"></i>Payment Method</h4>
+                    <div class="card p-4">
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="pay_method" value="cod" id="payCod" checked>
+                            <label class="form-check-label" for="payCod">Cash on Delivery / At Reception</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="pay_method" value="insurance" id="payInsurance">
+                            <label class="form-check-label" for="payInsurance">Insurance</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="pay_method" value="online" id="payOnline">
+                            <label class="form-check-label" for="payOnline">Online Payment</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5" data-aos="fade-left">
+                    <h4 class="section-title"><i class="fas fa-shopping-bag text-primary me-2"></i>Order Summary</h4>
+                    <div class="card p-4">
+                        {% for item in cart_items %}
+                        <div class="d-flex justify-content-between mb-2 pb-2 border-bottom">
+                            <div>
+                                <span class="fw-bold">{{ item.name }}</span>
+                                <small class="text-muted d-block">x {{ item.qty }}</small>
+                            </div>
+                            <span>CHF {{ item.subtotal|floatformat:2 }}</span>
+                        </div>
+                        {% endfor %}
+                        <div class="d-flex justify-content-between mt-3 pt-2 border-top">
+                            <span class="fs-5 fw-bold">Total</span>
+                            <span class="fs-5 fw-bold text-primary">CHF {{ total|floatformat:2 }}</span>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 btn-lg mt-4">
+                            <i class="fas fa-check-circle me-2"></i>Place Order
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

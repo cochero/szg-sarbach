@@ -1,0 +1,403 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}SZG Sarbach Gesundheitszentrum Leukerbad - Ayurveda & Naturheilkunde{% endblock %}
+{% block meta_description %}SZG Sarbach Gesundheitszentrum in Leukerbad, Wallis. Ayurveda, Naturheilkunde, Physiotherapie, Panchakarma Kuren. EMR & ASCA anerkannt. Jetzt Termin buchen!{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero-carousel .carousel-item { height: 550px; }
+    .hero-carousel .carousel-item img { object-fit: cover; width: 100%; height: 100%; }
+    .hero-carousel .carousel-caption { background: rgba(0,0,0,0.45); padding: 30px 40px; border-radius: 12px; bottom: 15%; }
+    .hero-carousel .carousel-caption h2 { font-size: 2.2rem; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); }
+
+    .symptom-card { background: #fff; border-radius: 12px; padding: 20px 15px; text-align: center; transition: all 0.3s; min-height: 120px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+    .symptom-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(108,180,68,0.2); }
+    .symptom-card i { color: var(--primary); font-size: 1.8rem; margin-bottom: 8px; }
+    .symptom-card h6 { font-size: 0.85rem; margin: 0; color: #333; }
+
+    .promo-banner { position: relative; border-radius: 16px; overflow: hidden; height: 300px; }
+    .promo-banner img { width: 100%; height: 100%; object-fit: cover; }
+    .promo-banner .overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(108,180,68,0.85), rgba(58,125,30,0.85)); display: flex; flex-direction: column; justify-content: center; align-items: center; color: #fff; padding: 30px; text-align: center; }
+
+    .treatment-card { border-radius: 16px; overflow: hidden; }
+    .treatment-card .card-img-top { height: 220px; object-fit: cover; }
+    .treatment-card .price-badge { position: absolute; top: 15px; right: 15px; background: var(--primary); color: #fff; padding: 5px 12px; border-radius: 20px; font-weight: 600; font-size: 0.9rem; }
+
+    .addon-card { border-radius: 16px; overflow: hidden; text-align: center; }
+    .addon-card img { height: 180px; object-fit: cover; width: 100%; }
+
+    .cert-badge { background: #fff; border-radius: 12px; padding: 15px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    .cert-badge .cert-label { font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+    .cert-badge .cert-value { font-size: 1.1rem; font-weight: 700; color: var(--primary); }
+
+    .why-choose-item { display: flex; align-items: start; gap: 15px; margin-bottom: 20px; }
+    .why-choose-item .icon-circle { width: 50px; height: 50px; border-radius: 50%; background: var(--primary-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .why-choose-item .icon-circle i { color: var(--primary); font-size: 1.2rem; }
+
+    .dept-card { border-radius: 16px; padding: 25px 15px; text-align: center; background: #fff; transition: all 0.3s; }
+    .dept-card:hover { transform: translateY(-8px); box-shadow: 0 12px 30px rgba(108,180,68,0.15); }
+    .dept-card .dept-icon { width: 70px; height: 70px; border-radius: 50%; background: var(--primary-light); display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; }
+    .dept-card .dept-icon i { color: var(--primary); font-size: 1.5rem; }
+
+    @media (max-width: 768px) {
+        .hero-carousel .carousel-item { height: 350px; }
+        .hero-carousel .carousel-caption h2 { font-size: 1.4rem; }
+        .hero-carousel .carousel-caption { padding: 15px 20px; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="bannerCarousel" class="carousel slide hero-carousel" data-bs-ride="carousel" data-bs-interval="5000">
+    <div class="carousel-indicators">
+        {% for banner in banners %}
+        <button type="button" data-bs-target="#bannerCarousel" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %}></button>
+        {% endfor %}
+    </div>
+    <div class="carousel-inner">
+        {% for banner in banners %}
+        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+            <img src="{{ banner.image.url }}" class="d-block" alt="{{ banner.title }}" loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
+            <div class="carousel-caption d-none d-md-block">
+                <h2 class="fw-bold mb-2">{{ banner.title }}</h2>
+                <p class="mb-3">{{ banner.description }}</p>
+                {% if banner.link %}
+                <a href="{{ banner.link }}" class="btn btn-primary btn-lg">Explore</a>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="carousel-item active" style="height: 550px; background: linear-gradient(135deg, #6cb444, #3a7d1e);">
+            <div class="d-flex align-items-center justify-content-center h-100 text-white text-center">
+                <div>
+                    <h1 class="display-4 fw-bold">SZG Sarbach Gesundheitszentrum</h1>
+                    <p class="lead">Ganzheitliche Gesundheit in Leukerbad, Schweiz</p>
+                    <a href="{% url 'appointment' %}" class="btn btn-light btn-lg mt-3">Termin buchen</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% if banners|length > 1 %}
+    <button class="carousel-control-prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+    </button>
+    {% endif %}
+</div>
+
+<section class="py-4" style="background: var(--primary-light);">
+    <div class="container">
+        <div class="row g-3 justify-content-center align-items-center">
+            <div class="col-auto">
+                <div class="cert-badge">
+                    <div class="cert-label">EMR Nr</div>
+                    <div class="cert-value">{{ site_settings.emr_nr|default:"26054" }}</div>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="cert-badge">
+                    <div class="cert-label">ZSR Nr</div>
+                    <div class="cert-value">{{ site_settings.zsr_nr|default:"B494360" }}</div>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="cert-badge">
+                    <div class="cert-label">ASCA</div>
+                    <div class="cert-value">{{ site_settings.asca_id|default:"106773" }}</div>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="cert-badge">
+                    <div class="cert-label">EGK Nr</div>
+                    <div class="cert-value">{{ site_settings.egk_nr|default:"42736" }}</div>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="cert-badge">
+                    <div class="cert-label">GLN</div>
+                    <div class="cert-value">{{ site_settings.gln_nr|default:"7601002563383" }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5" data-aos="fade-up">
+    <div class="container">
+        <h2 class="section-title text-center">Common Symptoms We Treat</h2>
+        <p class="text-center text-muted mb-4">Find relief for these conditions with our holistic Ayurvedic treatments</p>
+        <div class="row g-3">
+            {% for symptom in symptoms %}
+            <div class="col-lg-2 col-md-3 col-sm-4 col-6" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0 }}0">
+                <a href="{% url 'department_list' symptom.slug %}" class="text-decoration-none">
+                    <div class="symptom-card shadow-sm">
+                        <i class="fas fa-{% cycle 'head-side-mask' 'allergies' 'bed' 'bone' 'brain' 'running' 'lungs' 'joint' 'heartbeat' 'person-walking' 'hand-dots' 'weight-scale' 'virus' 'user-injured' 'eye' 'female' 'compress' 'diagnoses' %}"></i>
+                        <h6>{{ symptom.name }}</h6>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-light" data-aos="fade-up">
+    <div class="container">
+        <h2 class="section-title text-center">Clinic & Specialities</h2>
+        <p class="text-center text-muted mb-4">Ayurveda Treatments & Massages for Complete Well-being</p>
+        <div class="row g-4">
+            {% for treatment in treatments %}
+            <div class="col-lg-3 col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}0">
+                <div class="card treatment-card h-100 position-relative">
+                    {% if treatment.image %}
+                    <img src="{{ treatment.image.url }}" class="card-img-top" alt="{{ treatment.name }}" loading="lazy">
+                    <span class="price-badge">CHF {{ treatment.price|floatformat:0 }}</span>
+                    {% else %}
+                    <div class="card-img-top bg-primary-light d-flex align-items-center justify-content-center" style="height: 220px;">
+                        <i class="fas fa-spa fa-3x text-primary"></i>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title" style="font-size: 1rem;">{{ treatment.name }}</h5>
+                        <p class="card-text small text-muted">{{ treatment.description|truncatewords:15 }}</p>
+                    </div>
+                    <div class="card-footer bg-white border-0 pb-3">
+                        <a href="{% url 'treatment_detail' treatment.slug %}" class="btn btn-outline-primary btn-sm w-100">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-4">
+                <p class="text-muted">Treatments coming soon.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="py-5" data-aos="fade-up">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-6" data-aos="fade-right">
+                <div class="promo-banner">
+                    <img src="{% static 'images/promo/trythis.png' %}" alt="Try Ayurveda" loading="lazy">
+                    <div class="overlay">
+                        <h3 class="fw-bold mb-2">Discover Ayurveda</h3>
+                        <p>The ancient science of life for modern wellness</p>
+                        <a href="{% url 'appointment' %}" class="btn btn-light">Book a Consultation</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6" data-aos="fade-left">
+                <div class="promo-banner">
+                    <img src="{% static 'img/slider/feature-img.jpg' %}" alt="Gift Vouchers" loading="lazy">
+                    <div class="overlay" style="background: linear-gradient(135deg, rgba(26,26,46,0.85), rgba(26,26,46,0.75));">
+                        <h3 class="fw-bold mb-2">Gift Voucher</h3>
+                        <p>A Gift For Your Loved Ones - Buy a gift voucher today</p>
+                        <a href="{% url 'contact' %}" class="btn btn-primary">Contact Us</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-light" data-aos="fade-up">
+    <div class="container">
+        <h2 class="section-title text-center">Browse by Department</h2>
+        <p class="text-center text-muted mb-4">Find treatments by speciality</p>
+        <div class="row g-4 justify-content-center">
+            {% for dept in departments %}
+            <div class="col-lg-3 col-md-4 col-sm-6" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0 }}0">
+                <a href="{% url 'department_list' dept.slug %}" class="text-decoration-none">
+                    <div class="dept-card shadow-sm">
+                        <div class="dept-icon">
+                            <i class="fas fa-{% cycle 'spa' 'leaf' 'bone' 'lungs' 'yin-yang' 'bell' 'hand-holding-medical' %}"></i>
+                        </div>
+                        <h6 class="fw-bold text-dark mb-1">{{ dept.name }}</h6>
+                        <small class="text-muted">{{ dept.treatment_set.count }} treatment{{ dept.treatment_set.count|pluralize }}</small>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="py-5" data-aos="fade-up">
+    <div class="container">
+        <h2 class="section-title text-center">Add-on Services</h2>
+        <p class="text-center text-muted mb-4">Enhance your treatment with these additional services</p>
+        <div class="row g-4 justify-content-center">
+            {% for addon in addons %}
+            <div class="col-lg-3 col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}0">
+                <div class="card addon-card h-100">
+                    {% if addon.image %}
+                    <img src="{{ addon.image.url }}" alt="{{ addon.title }}" loading="lazy">
+                    {% else %}
+                    <div style="height: 180px; background: var(--primary-light);" class="d-flex align-items-center justify-content-center">
+                        <i class="fas fa-plus-circle fa-3x text-primary"></i>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title" style="font-size: 1rem;">{{ addon.title }}</h5>
+                        <p class="text-primary fw-bold">CHF {{ addon.price|floatformat:0 }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="py-5" style="background: linear-gradient(135deg, #f8f9fa, #e8f5e0);" data-aos="fade-up">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6" data-aos="fade-right">
+                <h2 class="section-title">Why Choose SZG Sarbach?</h2>
+                <div class="why-choose-item">
+                    <div class="icon-circle"><i class="fas fa-certificate"></i></div>
+                    <div>
+                        <h6 class="fw-bold mb-1">EMR & ASCA Recognized</h6>
+                        <p class="text-muted small mb-0">Our treatments are recognized by all major Swiss complementary insurance providers.</p>
+                    </div>
+                </div>
+                <div class="why-choose-item">
+                    <div class="icon-circle"><i class="fas fa-user-md"></i></div>
+                    <div>
+                        <h6 class="fw-bold mb-1">Qualified Practitioners</h6>
+                        <p class="text-muted small mb-0">Our team has years of experience in traditional Ayurvedic medicine and modern therapies.</p>
+                    </div>
+                </div>
+                <div class="why-choose-item">
+                    <div class="icon-circle"><i class="fas fa-mountain"></i></div>
+                    <div>
+                        <h6 class="fw-bold mb-1">Beautiful Leukerbad Location</h6>
+                        <p class="text-muted small mb-0">Heal in the heart of the Swiss Alps, surrounded by nature and thermal springs.</p>
+                    </div>
+                </div>
+                <div class="why-choose-item">
+                    <div class="icon-circle"><i class="fas fa-heartbeat"></i></div>
+                    <div>
+                        <h6 class="fw-bold mb-1">Holistic Approach</h6>
+                        <p class="text-muted small mb-0">We treat the whole person - body, mind and soul - for lasting wellness results.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center mt-4 mt-lg-0" data-aos="fade-left">
+                <img src="{% static 'images/Bernadette_Bevin_vor_Broschure.jpg' %}" alt="SZG Sarbach Team" class="img-fluid rounded-4 shadow" loading="lazy" style="max-height: 400px; object-fit: cover;">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5" data-aos="fade-up">
+    <div class="container">
+        <h2 class="section-title text-center">Our Doctors</h2>
+        <p class="text-center text-muted mb-4">Experienced and qualified health professionals</p>
+        <div class="row g-4 justify-content-center">
+            {% for doctor in doctors %}
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+                <div class="card text-center h-100" style="border-radius: 16px; overflow: hidden;">
+                    {% if doctor.image %}
+                    <img src="{{ doctor.image.url }}" class="card-img-top" alt="{{ doctor.name }}" style="height: 300px; object-fit: cover;" loading="lazy">
+                    {% else %}
+                    <div class="card-img-top bg-primary-light d-flex align-items-center justify-content-center" style="height: 300px;">
+                        <i class="fas fa-user-md fa-4x text-primary"></i>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">{{ doctor.name }}</h5>
+                        <p class="text-muted small mb-1">{{ doctor.qualification }}</p>
+                        <p class="fw-bold small mb-2">{{ doctor.specialization }}</p>
+                        {% if doctor.department %}
+                        <span class="badge bg-primary-light text-primary">{{ doctor.department.name }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center"><p class="text-muted">Doctor profiles coming soon.</p></div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% if blogs %}
+<section class="py-5 bg-light" data-aos="fade-up">
+    <div class="container">
+        <h2 class="section-title text-center">Latest News & Blog</h2>
+        <div class="row g-4">
+            {% for blog in blogs %}
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+                <div class="card h-100" style="border-radius: 16px; overflow: hidden;">
+                    {% if blog.image %}
+                    <img src="{{ blog.image.url }}" class="card-img-top" alt="{{ blog.title }}" style="height: 200px; object-fit: cover;" loading="lazy">
+                    {% else %}
+                    <div class="card-img-top bg-primary-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                        <i class="fas fa-newspaper fa-3x text-primary"></i>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <small class="text-muted"><i class="far fa-calendar me-1"></i>{{ blog.date }}</small>
+                        <h5 class="card-title mt-2">{{ blog.title }}</h5>
+                        <p class="card-text small text-muted">{{ blog.description|truncatewords:20|safe }}</p>
+                    </div>
+                    <div class="card-footer bg-white border-0 pb-3">
+                        <a href="{% url 'blog_detail' blog.slug %}" class="btn btn-outline-primary btn-sm">Read More</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<section class="py-5" style="background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff;" data-aos="fade-up">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h2 class="fw-bold mb-3">Book Your Appointment Today</h2>
+                <p class="mb-0 opacity-75">Experience holistic healing at our health centre in Leukerbad. Our experienced practitioners combine traditional Ayurvedic wisdom with modern medical knowledge for your complete well-being.</p>
+            </div>
+            <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                <a href="{% url 'appointment' %}" class="btn btn-light btn-lg px-4 me-2"><i class="fas fa-calendar-check me-2"></i>Book Now</a>
+                <a href="https://wa.me/41792907744?text=Hello%2C%20I%20would%20like%20to%20book%20an%20appointment%20at%20SZG%20Sarbach." target="_blank" class="btn btn-lg px-4 me-2" style="background-color: #25D366; color: #fff; border: none;"><i class="fab fa-whatsapp me-2"></i>WhatsApp</a>
+                <a href="{% url 'contact' %}" class="btn btn-outline-light btn-lg px-4"><i class="fas fa-phone me-2"></i>Contact</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "MedicalBusiness",
+    "name": "SZG Sarbach Gesundheitszentrum",
+    "description": "Ganzheitliches Gesundheitszentrum in Leukerbad, Schweiz. Ayurveda, Naturheilkunde, Physiotherapie.",
+    "url": "{{ request.build_absolute_uri }}",
+    "telephone": "{{ site_settings.site_phone|default:'+41 79 290 77 44' }}",
+    "email": "{{ site_settings.site_email|default:'help@sarbach.swiss' }}",
+    "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Dorfstrasse 23",
+        "addressLocality": "Leukerbad",
+        "postalCode": "3954",
+        "addressCountry": "CH"
+    },
+    "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "46.3833",
+        "longitude": "7.6333"
+    },
+    "priceRange": "$$",
+    "medicalSpecialty": ["Ayurveda", "Naturopathy", "Physiotherapy"]
+}
+</script>
+{% endblock %}

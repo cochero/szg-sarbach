@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}My Dashboard - SZG Sarbach{% endblock %}
+
+{% block content %}
+<div class="breadcrumb-area">
+    <div class="container">
+        <h1 class="fw-bold">My Dashboard</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item active">Dashboard</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-3" data-aos="fade-right">
+                <div class="card p-4 text-center">
+                    <i class="fas fa-user-circle fa-4x text-primary mb-3"></i>
+                    <h5>{{ user.get_full_name|default:user.username }}</h5>
+                    <p class="text-muted small">{{ user.email }}</p>
+                    <hr>
+                    <ul class="list-unstyled text-start small">
+                        <li class="mb-2"><a href="{% url 'user_dashboard' %}" class="text-primary"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
+                        <li class="mb-2"><a href="{% url 'my_appointments' %}"><i class="fas fa-calendar-check me-2"></i>My Appointments</a></li>
+                        <li class="mb-2"><a href="{% url 'my_addons' %}"><i class="fas fa-plus-circle me-2"></i>My Addons</a></li>
+                        <li class="mb-2"><a href="{% url 'my_orders' %}"><i class="fas fa-shopping-bag me-2"></i>My Orders</a></li>
+                        <li class="mb-2"><a href="{% url 'user_profile' %}"><i class="fas fa-user-edit me-2"></i>Edit Profile</a></li>
+                        <li class="mb-2"><a href="{% url 'appointment' %}"><i class="fas fa-calendar-plus me-2"></i>Book Appointment</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-9" data-aos="fade-left">
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <div class="card p-3 text-center bg-primary-light">
+                            <h3 class="text-primary mb-0">{{ appointments.count }}</h3>
+                            <small class="text-muted">Total Appointments</small>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card p-3 text-center bg-primary-light">
+                            <h3 class="text-primary mb-0">{{ appointments|length }}</h3>
+                            <small class="text-muted">Records</small>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card p-3 text-center">
+                            <a href="{% url 'appointment' %}" class="btn btn-primary">
+                                <i class="fas fa-plus me-2"></i>New Appointment
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="fas fa-calendar-check text-primary me-2"></i>Recent Appointments</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Date</th>
+                                        <th>Department</th>
+                                        <th>Treatment</th>
+                                        <th>Status</th>
+                                        <th>Payment</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for apt in appointments %}
+                                    <tr>
+                                        <td>{{ apt.id }}</td>
+                                        <td>{{ apt.appointment_date }}</td>
+                                        <td>{{ apt.department.name|default:"-" }}</td>
+                                        <td>{{ apt.treatment.name|default:"-" }}</td>
+                                        <td>
+                                            <span class="badge {% if apt.status == 'Confirmed' %}bg-success{% elif apt.status == 'Pending' %}bg-warning text-dark{% elif apt.status == 'Cancelled' %}bg-danger{% else %}bg-secondary{% endif %} badge-status">{{ apt.status }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="badge {% if apt.payment_status == 'Paid' %}bg-success{% else %}bg-warning text-dark{% endif %} badge-status">{{ apt.payment_status }}</span>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr><td colspan="6" class="text-center py-4 text-muted">No appointments yet. <a href="{% url 'appointment' %}">Book one now!</a></td></tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

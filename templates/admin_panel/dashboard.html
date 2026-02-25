@@ -1,0 +1,100 @@
+{% extends 'admin_panel/base_admin.html' %}
+
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block admin_content %}
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="card stat-card p-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <p class="text-muted mb-1 small">Total Doctors</p>
+                    <h3 class="mb-0">{{ doctor_count }}</h3>
+                </div>
+                <div class="stat-icon"><i class="fas fa-user-md"></i></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card p-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <p class="text-muted mb-1 small">Total Patients</p>
+                    <h3 class="mb-0">{{ patient_count }}</h3>
+                </div>
+                <div class="stat-icon"><i class="fas fa-users"></i></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card p-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <p class="text-muted mb-1 small">Appointments</p>
+                    <h3 class="mb-0">{{ appointment_count }}</h3>
+                </div>
+                <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card p-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <p class="text-muted mb-1 small">Total Orders</p>
+                    <h3 class="mb-0">{{ order_count }}</h3>
+                </div>
+                <div class="stat-icon"><i class="fas fa-shopping-cart"></i></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Recent Appointments</h5>
+        <a href="{% url 'admin_appointment_list' %}" class="btn btn-sm btn-outline-primary">View All</a>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Patient</th>
+                        <th>Doctor</th>
+                        <th>Treatment</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Payment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appt in recent_appointments %}
+                    <tr>
+                        <td>{{ appt.id }}</td>
+                        <td>{{ appt.patient.get_full_name }}</td>
+                        <td>{{ appt.doctor.name|default:"-" }}</td>
+                        <td>{{ appt.treatment.name|default:"-" }}</td>
+                        <td>{{ appt.appointment_date }}</td>
+                        <td>
+                            <span class="badge {% if appt.status == 'Completed' %}bg-success{% elif appt.status == 'Confirmed' %}bg-primary{% elif appt.status == 'Cancelled' %}bg-danger{% else %}bg-warning text-dark{% endif %}">
+                                {{ appt.status }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge {% if appt.payment_status == 'Paid' %}bg-success{% elif appt.payment_status == 'Insurance' %}bg-info{% else %}bg-secondary{% endif %}">
+                                {{ appt.payment_status }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="7" class="text-center text-muted py-4">No appointments yet</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

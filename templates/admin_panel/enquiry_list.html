@@ -1,0 +1,50 @@
+{% extends 'admin_panel/base_admin.html' %}
+
+{% block title %}Enquiries{% endblock %}
+{% block page_title %}Contact Enquiries{% endblock %}
+
+{% block admin_content %}
+<div class="card">
+    <div class="card-header bg-white">
+        <h5 class="mb-0"><i class="fas fa-envelope me-2"></i>Enquiries</h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Subject</th>
+                        <th>Message</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for enq in enquiries %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td><strong>{{ enq.name }}</strong></td>
+                        <td>{{ enq.email }}</td>
+                        <td>{{ enq.phone|default:"-" }}</td>
+                        <td>{{ enq.subject|default:"-" }}</td>
+                        <td>{{ enq.message|truncatewords:10 }}</td>
+                        <td>{{ enq.created_at|date:"Y-m-d H:i" }}</td>
+                        <td>
+                            <span class="badge {% if enq.is_read %}bg-success{% else %}bg-warning text-dark{% endif %}">
+                                {{ enq.is_read|yesno:"Read,Unread" }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="8" class="text-center text-muted py-4">No enquiries found</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

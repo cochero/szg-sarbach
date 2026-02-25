@@ -1,0 +1,74 @@
+{% extends 'admin_panel/base_admin.html' %}
+
+{% block title %}My Appointments{% endblock %}
+{% block page_title %}My Appointments{% endblock %}
+
+{% block sidebar %}
+<nav class="sidebar" id="sidebar">
+    <div class="brand">
+        <h4><i class="fas fa-heartbeat"></i> SZG Sarbach</h4>
+        <small>Doctor Portal</small>
+    </div>
+    <div class="nav flex-column mt-2">
+        <span class="nav-section">Menu</span>
+        <a class="nav-link {% if request.resolver_match.url_name == 'doctor_dashboard' %}active{% endif %}" href="{% url 'doctor_dashboard' %}">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+        </a>
+        <a class="nav-link {% if request.resolver_match.url_name == 'doctor_appointments' %}active{% endif %}" href="{% url 'doctor_appointments' %}">
+            <i class="fas fa-calendar-check"></i> Appointments
+        </a>
+    </div>
+</nav>
+{% endblock %}
+
+{% block admin_content %}
+<div class="card">
+    <div class="card-header bg-white">
+        <h5 class="mb-0"><i class="fas fa-calendar-check me-2"></i>My Appointments</h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Patient</th>
+                        <th>Treatment</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Payment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appt in appointments %}
+                    <tr>
+                        <td>{{ appt.id }}</td>
+                        <td>{{ appt.patient.get_full_name }}</td>
+                        <td>{{ appt.treatment.name|default:"-" }}</td>
+                        <td>{{ appt.appointment_date }}</td>
+                        <td>{{ appt.appointment_time|default:"-" }}</td>
+                        <td><span class="badge bg-info">{{ appt.appointment_type }}</span></td>
+                        <td>CHF {{ appt.amount }}</td>
+                        <td>
+                            <span class="badge {% if appt.status == 'Completed' %}bg-success{% elif appt.status == 'Confirmed' %}bg-primary{% elif appt.status == 'Cancelled' %}bg-danger{% else %}bg-warning text-dark{% endif %}">
+                                {{ appt.status }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge {% if appt.payment_status == 'Paid' %}bg-success{% elif appt.payment_status == 'Insurance' %}bg-info{% else %}bg-secondary{% endif %}">
+                                {{ appt.payment_status }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="9" class="text-center text-muted py-4">No appointments found</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

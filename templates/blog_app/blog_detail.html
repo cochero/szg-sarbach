@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ post.meta_title|default:post.title }} - SZG Sarbach{% endblock %}
+{% block meta_description %}{{ post.meta_description|default:post.description|truncatewords:25 }}{% endblock %}
+
+{% block content %}
+<div class="breadcrumb-area">
+    <div class="container">
+        <h1 class="fw-bold">{{ post.title }}</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                {% if post.post_type == 'Event' %}
+                <li class="breadcrumb-item"><a href="{% url 'events' %}">Events</a></li>
+                {% elif post.post_type == 'WorkShop' %}
+                <li class="breadcrumb-item"><a href="{% url 'workshops' %}">Workshops</a></li>
+                {% else %}
+                <li class="breadcrumb-item"><a href="{% url 'blogs' %}">Blogs</a></li>
+                {% endif %}
+                <li class="breadcrumb-item active">{{ post.title|truncatewords:5 }}</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-lg-8" data-aos="fade-right">
+                {% if post.image %}
+                <img src="{{ post.image.url }}" class="img-fluid rounded-3 mb-4 w-100" alt="{{ post.title }}" style="max-height: 450px; object-fit: cover;">
+                {% endif %}
+
+                <div class="d-flex align-items-center gap-3 mb-4 text-muted small">
+                    <span><i class="far fa-calendar me-1"></i>{{ post.date }}</span>
+                    {% if post.author %}
+                    <span><i class="fas fa-user me-1"></i>{{ post.author }}</span>
+                    {% endif %}
+                    <span class="badge bg-primary-light text-primary">{{ post.post_type }}</span>
+                </div>
+
+                <div class="mb-4">{{ post.description|safe }}</div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <span class="text-muted small">Share:</span>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank" class="text-primary"><i class="fab fa-facebook fa-lg"></i></a>
+                    <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ post.title }}" target="_blank" class="text-primary"><i class="fab fa-twitter fa-lg"></i></a>
+                    <a href="https://wa.me/?text={{ post.title }} {{ request.build_absolute_uri }}" target="_blank" class="text-primary"><i class="fab fa-whatsapp fa-lg"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-4" data-aos="fade-left">
+                {% if related_posts %}
+                <h5 class="section-title">Related Posts</h5>
+                {% for rpost in related_posts %}
+                <div class="card mb-3">
+                    <div class="row g-0">
+                        {% if rpost.image %}
+                        <div class="col-4">
+                            <img src="{{ rpost.image.url }}" class="img-fluid rounded-start h-100" alt="{{ rpost.title }}" style="object-fit: cover;">
+                        </div>
+                        {% endif %}
+                        <div class="{% if rpost.image %}col-8{% else %}col-12{% endif %}">
+                            <div class="card-body p-2">
+                                <small class="text-muted">{{ rpost.date }}</small>
+                                <h6 class="card-title small mb-0">
+                                    {% if rpost.post_type == 'Event' %}
+                                    <a href="{% url 'event_detail' rpost.slug %}" class="text-dark">{{ rpost.title|truncatewords:8 }}</a>
+                                    {% elif rpost.post_type == 'WorkShop' %}
+                                    <a href="{% url 'workshop_detail' rpost.slug %}" class="text-dark">{{ rpost.title|truncatewords:8 }}</a>
+                                    {% else %}
+                                    <a href="{% url 'blog_detail' rpost.slug %}" class="text-dark">{{ rpost.title|truncatewords:8 }}</a>
+                                    {% endif %}
+                                </h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% endif %}
+
+                <div class="card p-4 mt-4">
+                    <h5 class="text-primary mb-3">Book an Appointment</h5>
+                    <p class="small text-muted">Interested in our treatments? Book your appointment today.</p>
+                    <a href="{% url 'appointment' %}" class="btn btn-primary w-100"><i class="fas fa-calendar-plus me-2"></i>Book Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends 'admin_panel/base_admin.html' %}
+
+{% block title %}Patient History{% endblock %}
+{% block page_title %}Patient History{% endblock %}
+
+{% block admin_content %}
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <img src="{{ patient_profile.profile_image.url }}" class="rounded-circle mb-3" width="100" height="100" style="object-fit:cover;">
+                <h5>{{ patient_profile.user.get_full_name }}</h5>
+                <p class="text-muted mb-1">{{ patient_profile.user.email }}</p>
+                <p class="text-muted mb-1"><i class="fas fa-phone me-1"></i> {{ patient_profile.phone|default:"-" }}</p>
+                <hr>
+                <div class="text-start small">
+                    <p><strong>Gender:</strong> {{ patient_profile.gender|default:"-" }}</p>
+                    <p><strong>Age:</strong> {{ patient_profile.age|default:"-" }}</p>
+                    <p><strong>DOB:</strong> {{ patient_profile.dob|default:"-" }}</p>
+                    <p><strong>Address:</strong> {{ patient_profile.street }} {{ patient_profile.street_number }}, {{ patient_profile.plz }} {{ patient_profile.city }}</p>
+                    <p><strong>State:</strong> {{ patient_profile.state|default:"-" }}</p>
+                    <p><strong>Basic Insurance:</strong> {{ patient_profile.basic_insurance|default:"-" }}</p>
+                    <p><strong>Complementary Insurance:</strong> {{ patient_profile.complementary_insurance|default:"-" }}</p>
+                    <p><strong>Registered:</strong> {{ patient_profile.registration_date }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header bg-white">
+                <h6 class="mb-0"><i class="fas fa-calendar-check me-2"></i>Appointments</h6>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Date</th>
+                                <th>Doctor</th>
+                                <th>Treatment</th>
+                                <th>Status</th>
+                                <th>Payment</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for appt in appointments %}
+                            <tr>
+                                <td>{{ appt.id }}</td>
+                                <td>{{ appt.appointment_date }}</td>
+                                <td>{{ appt.doctor.name|default:"-" }}</td>
+                                <td>{{ appt.treatment.name|default:"-" }}</td>
+                                <td><span class="badge {% if appt.status == 'Completed' %}bg-success{% elif appt.status == 'Confirmed' %}bg-primary{% elif appt.status == 'Cancelled' %}bg-danger{% else %}bg-warning text-dark{% endif %}">{{ appt.status }}</span></td>
+                                <td><span class="badge {% if appt.payment_status == 'Paid' %}bg-success{% else %}bg-secondary{% endif %}">{{ appt.payment_status }}</span></td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="6" class="text-center text-muted py-3">No appointments</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header bg-white">
+                <h6 class="mb-0"><i class="fas fa-stethoscope me-2"></i>Examinations</h6>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Doctor</th>
+                                <th>BP</th>
+                                <th>Pulse</th>
+                                <th>Temp</th>
+                                <th>Diagnosis</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for exam in examinations %}
+                            <tr>
+                                <td>{{ exam.exam_date }}</td>
+                                <td>{{ exam.doctor.name|default:"-" }}</td>
+                                <td>{{ exam.blood_pressure|default:"-" }}</td>
+                                <td>{{ exam.pulse|default:"-" }}</td>
+                                <td>{{ exam.temperature|default:"-" }}</td>
+                                <td>{{ exam.diagnosis|truncatewords:10|default:"-" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="6" class="text-center text-muted py-3">No examinations</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<a href="{% url 'admin_patient_list' %}" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-1"></i> Back to Patients</a>
+{% endblock %}

@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}{{ treatment.name }} - SZG Sarbach{% endblock %}
+{% block meta_description %}{{ treatment.short_description|truncatewords:25 }}{% endblock %}
+
+{% block content %}
+<div class="breadcrumb-area">
+    <div class="container">
+        <h1 class="fw-bold">{{ treatment.name }}</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                {% if treatment.department %}
+                <li class="breadcrumb-item"><a href="{% url 'department_list' treatment.department.slug %}">{{ treatment.department.name }}</a></li>
+                {% endif %}
+                <li class="breadcrumb-item active">{{ treatment.name }}</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-lg-8" data-aos="fade-right">
+                {% if treatment.image %}
+                <img src="{{ treatment.image.url }}" class="img-fluid rounded-3 mb-4 w-100" alt="{{ treatment.name }}" style="max-height: 400px; object-fit: cover;">
+                {% endif %}
+
+                <h2 class="section-title">{{ treatment.name }}</h2>
+                <div class="mb-4">{{ treatment.description|safe }}</div>
+
+                {% if steps %}
+                <h4 class="mt-5 mb-3"><i class="fas fa-list-ol text-primary me-2"></i>Treatment Steps</h4>
+                <div class="row g-3">
+                    {% for step in steps %}
+                    <div class="col-12">
+                        <div class="card p-3">
+                            <div class="d-flex align-items-start">
+                                <span class="badge bg-primary rounded-circle me-3 p-2" style="width: 35px; height: 35px; line-height: 20px;">{{ step.order }}</span>
+                                <div>
+                                    <h6 class="mb-1">{{ step.title }}</h6>
+                                    <p class="text-muted small mb-0">{{ step.description }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% if gallery %}
+                <h4 class="mt-5 mb-3"><i class="fas fa-images text-primary me-2"></i>Gallery</h4>
+                <div class="row g-2">
+                    {% for img in gallery %}
+                    <div class="col-md-4 col-6">
+                        <img src="{{ img.image.url }}" class="img-fluid rounded" alt="Gallery image">
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            <div class="col-lg-4" data-aos="fade-left">
+                <div class="card p-4 mb-4">
+                    <h5 class="text-primary mb-3">Treatment Details</h5>
+                    <ul class="list-unstyled">
+                        <li class="d-flex justify-content-between mb-2 pb-2 border-bottom">
+                            <span class="text-muted">Price</span>
+                            <span class="fw-bold text-primary">CHF {{ treatment.price }}</span>
+                        </li>
+                        <li class="d-flex justify-content-between mb-2 pb-2 border-bottom">
+                            <span class="text-muted">Duration</span>
+                            <span class="fw-bold">{{ treatment.duration_days }} days</span>
+                        </li>
+                        {% if treatment.department %}
+                        <li class="d-flex justify-content-between mb-2 pb-2 border-bottom">
+                            <span class="text-muted">Department</span>
+                            <span>{{ treatment.department.name }}</span>
+                        </li>
+                        {% endif %}
+                    </ul>
+                    <a href="{% url 'appointment' %}" class="btn btn-primary w-100 mt-2"><i class="fas fa-calendar-plus me-2"></i>Book Appointment</a>
+                </div>
+                <div class="card p-4">
+                    <h5 class="text-primary mb-3">Need Help?</h5>
+                    <p class="small text-muted">Contact us for more information about this treatment.</p>
+                    <p class="mb-1"><i class="fas fa-phone text-primary me-2"></i>{{ site_settings.site_phone|default:"+41 79 290 77 44" }}</p>
+                    <p><i class="fas fa-envelope text-primary me-2"></i>{{ site_settings.site_email|default:"help@sarbach.swiss" }}</p>
+                    <a href="{% url 'contact' %}" class="btn btn-outline-primary btn-sm w-100 mt-2">Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

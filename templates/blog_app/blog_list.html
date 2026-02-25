@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ page_title }} - SZG Sarbach{% endblock %}
+{% block meta_description %}Latest {{ page_title|lower }} from SZG Sarbach Gesundheitszentrum Leukerbad.{% endblock %}
+
+{% block content %}
+<div class="breadcrumb-area">
+    <div class="container">
+        <h1 class="fw-bold">{{ page_title }}</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item active">{{ page_title }}</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            {% for post in posts %}
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}50">
+                <div class="card h-100">
+                    {% if post.image %}
+                    <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}" style="height: 220px; object-fit: cover;">
+                    {% else %}
+                    <div class="card-img-top bg-primary-light d-flex align-items-center justify-content-center" style="height: 220px;">
+                        <i class="fas fa-{% if post_type == 'Event' %}calendar-alt{% elif post_type == 'WorkShop' %}chalkboard-teacher{% else %}newspaper{% endif %} fa-3x text-primary"></i>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <small class="text-muted"><i class="far fa-calendar me-1"></i>{{ post.date }}</small>
+                            <span class="badge bg-primary-light text-primary">{{ post.post_type }}</span>
+                        </div>
+                        <h5 class="card-title">{{ post.title }}</h5>
+                        <p class="card-text small text-muted">{{ post.description|truncatewords:20|safe }}</p>
+                        {% if post.author %}
+                        <small class="text-muted"><i class="fas fa-user me-1"></i>{{ post.author }}</small>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer bg-white border-0">
+                        {% if post.post_type == 'Event' %}
+                        <a href="{% url 'event_detail' post.slug %}" class="btn btn-outline-primary btn-sm w-100">Read More</a>
+                        {% elif post.post_type == 'WorkShop' %}
+                        <a href="{% url 'workshop_detail' post.slug %}" class="btn btn-outline-primary btn-sm w-100">Read More</a>
+                        {% else %}
+                        <a href="{% url 'blog_detail' post.slug %}" class="btn btn-outline-primary btn-sm w-100">Read More</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <i class="fas fa-newspaper fa-3x text-muted mb-3"></i>
+                <p class="text-muted">No {{ page_title|lower }} available yet.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

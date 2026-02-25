@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Terms & Conditions - SZG Sarbach{% endblock %}
+{% block meta_description %}Terms and conditions of SZG Sarbach Gesundheitszentrum Leukerbad.{% endblock %}
+
+{% block content %}
+<div class="breadcrumb-area">
+    <div class="container">
+        <h1 class="fw-bold">Terms & Conditions</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item active">Terms & Conditions</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8" data-aos="fade-up">
+                <div class="card p-4 p-lg-5">
+                    <h3 class="section-title">Allgemeine Geschäftsbedingungen / Terms & Conditions</h3>
+
+                    <h5 class="mt-4">1. General</h5>
+                    <p>These terms and conditions govern the use of services provided by SZG Sarbach Gesundheitszentrum, located at Dorfstrasse 19, CH-3954 Leukerbad, Switzerland.</p>
+
+                    <h5 class="mt-4">2. Services</h5>
+                    <p>We provide holistic health treatments including Ayurveda, naturopathy, physiotherapy, and related services. All treatments are performed by qualified and certified practitioners.</p>
+
+                    <h5 class="mt-4">3. Appointments</h5>
+                    <p>Appointments can be booked online, by phone, or by email. Cancellations must be made at least 24 hours in advance. Late cancellations or no-shows may be subject to a fee.</p>
+
+                    <h5 class="mt-4">4. Payments</h5>
+                    <p>Payment is due at the time of service unless prior arrangements have been made with insurance providers. We accept cash, bank transfer, and major payment methods.</p>
+
+                    <h5 class="mt-4">5. Insurance</h5>
+                    <p>Our services are recognized by EMR, ASCA, and EGK. Coverage depends on your individual insurance policy. We recommend checking with your insurance provider before booking treatments.</p>
+
+                    <h5 class="mt-4">6. Liability</h5>
+                    <p>Our practitioners exercise due diligence in all treatments. However, we cannot guarantee specific outcomes. Patients are responsible for providing accurate health information.</p>
+
+                    <h5 class="mt-4">7. Shop & Orders</h5>
+                    <p>Products ordered through our online shop are subject to availability. We reserve the right to cancel orders. Refunds are processed according to Swiss consumer protection laws.</p>
+
+                    <h5 class="mt-4">8. Governing Law</h5>
+                    <p>These terms are governed by Swiss law. Any disputes shall be resolved in the competent courts of the Canton of Valais.</p>
+
+                    <p class="text-muted small mt-4">Last updated: {% now "F Y" %}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

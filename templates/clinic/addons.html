@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Addons - SZG Sarbach{% endblock %}
+{% block meta_description %}Additional services and addons at SZG Sarbach Gesundheitszentrum Leukerbad.{% endblock %}
+
+{% block content %}
+<div class="breadcrumb-area">
+    <div class="container">
+        <h1 class="fw-bold">Addons</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item active">Addons</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center mb-5" data-aos="fade-up">
+            <div class="col-lg-8 text-center">
+                <h2 class="section-title text-center">Additional Services</h2>
+                <p class="text-muted">Enhance your treatment with these additional services and therapies.</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            {% for addon in addons %}
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}50">
+                <div class="card h-100">
+                    {% if addon.image %}
+                    <img src="{{ addon.image.url }}" class="card-img-top" alt="{{ addon.title }}" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                    <div class="card-img-top bg-primary-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                        <i class="fas fa-plus-circle fa-3x text-primary"></i>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ addon.title }}</h5>
+                        <p class="card-text small text-muted">{{ addon.description|truncatewords:20 }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="fw-bold text-primary">CHF {{ addon.price }}</span>
+                            {% if addon.duration %}
+                            <span class="badge bg-primary-light text-primary">{{ addon.duration }}</span>
+                            {% endif %}
+                        </div>
+                        {% if addon.prices.all %}
+                        <div class="mt-2">
+                            {% for price in addon.prices.all %}
+                            <small class="d-block text-muted">{{ price.duration }}: CHF {{ price.price }}</small>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer bg-white border-0">
+                        <a href="{% url 'appointment' %}" class="btn btn-primary btn-sm w-100">Book Now</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <i class="fas fa-plus-circle fa-3x text-muted mb-3"></i>
+                <p class="text-muted">Addon services coming soon.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

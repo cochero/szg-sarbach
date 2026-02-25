@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}About Us - SZG Sarbach Gesundheitszentrum{% endblock %}
+{% block meta_description %}Learn about SZG Sarbach Gesundheitszentrum in Leukerbad. Our mission, team, and holistic approach to health and wellness.{% endblock %}
+
+{% block content %}
+<div class="breadcrumb-area">
+    <div class="container">
+        <h1 class="fw-bold">About Us</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item active">About Us</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center g-5" data-aos="fade-up">
+            <div class="col-lg-6">
+                <h2 class="section-title">{{ site_settings.about_title|default:"SZG Sarbach Gesundheitszentrum" }}</h2>
+                {% if site_settings.about_content %}
+                    {{ site_settings.about_content|safe }}
+                {% else %}
+                <p>Located in the heart of Leukerbad, Switzerland, SZG Sarbach Health Centre provides holistic and integrative health services to patients from around the world. Our centre combines the ancient wisdom of Ayurveda and traditional natural medicine with modern therapeutic approaches.</p>
+                <p>Our team of experienced practitioners is dedicated to offering personalized treatment plans that address the root causes of health concerns, not just the symptoms. We are recognized by EMR, ASCA, EGK and major complementary insurance providers in Switzerland.</p>
+                <p>Nestled in the beautiful Valais Alps, Leukerbad is renowned for its thermal springs and clean mountain air — the perfect setting for healing and rejuvenation.</p>
+                {% endif %}
+            </div>
+            <div class="col-lg-6 text-center">
+                {% if site_settings.about_image %}
+                <img src="{{ site_settings.about_image.url }}" alt="{{ site_settings.about_title|default:'SZG Sarbach Team' }}" class="img-fluid rounded-4 shadow" loading="lazy" style="max-height: 400px; object-fit: cover;">
+                {% else %}
+                <img src="{% static 'images/Bernadette_Bevin_vor_Broschure.jpg' %}" alt="SZG Sarbach Team" class="img-fluid rounded-4 shadow" loading="lazy" style="max-height: 400px; object-fit: cover;">
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-light" data-aos="fade-up">
+    <div class="container">
+        <h2 class="section-title text-center">Our Team</h2>
+        <div class="row g-4 justify-content-center mt-3">
+            {% for doctor in doctors %}
+            <div class="col-lg-5 col-md-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+                <div class="card h-100 text-center overflow-hidden" style="border-radius: 16px;">
+                    {% if doctor.image %}
+                    <img src="{{ doctor.image.url }}" alt="{{ doctor.name }}" class="card-img-top" style="height: 350px; object-fit: cover;" loading="lazy">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="text-primary">{{ doctor.name }}</h5>
+                        <p class="fw-bold small mb-1">{{ doctor.qualification }}</p>
+                        <p class="text-muted small">{{ doctor.specialization }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="py-5" data-aos="fade-up">
+    <div class="container">
+        <h2 class="section-title text-center">Why Choose Us</h2>
+        <div class="row g-4 mt-3">
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 text-center p-4">
+                    <i class="fas fa-certificate fa-3x text-primary mb-3"></i>
+                    <h5>Certified & Recognized</h5>
+                    <p class="text-muted small">EMR, ASCA, EGK recognized. Treatments covered by complementary insurance.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 text-center p-4">
+                    <i class="fas fa-user-md fa-3x text-primary mb-3"></i>
+                    <h5>Expert Practitioners</h5>
+                    <p class="text-muted small">Qualified doctors and therapists with years of experience in holistic medicine.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 text-center p-4">
+                    <i class="fas fa-spa fa-3x text-primary mb-3"></i>
+                    <h5>Holistic Approach</h5>
+                    <p class="text-muted small">We treat the whole person — body, mind and spirit — with personalized care plans.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 text-center p-4">
+                    <i class="fas fa-mountain fa-3x text-primary mb-3"></i>
+                    <h5>Perfect Location</h5>
+                    <p class="text-muted small">Leukerbad's thermal springs and mountain air enhance your healing journey.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 text-center p-4">
+                    <i class="fas fa-hotel fa-3x text-primary mb-3"></i>
+                    <h5>Accommodation Options</h5>
+                    <p class="text-muted small">Comfortable apartments and hotels for your stay during treatment programs.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 text-center p-4">
+                    <i class="fas fa-globe fa-3x text-primary mb-3"></i>
+                    <h5>Multilingual Service</h5>
+                    <p class="text-muted small">We serve patients in German, English, French, Italian, and Russian.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-light" data-aos="fade-up">
+    <div class="container">
+        <h2 class="section-title text-center">Frequently Asked Questions</h2>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                Are your treatments covered by insurance?
+                            </button>
+                        </h2>
+                        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">Yes, our treatments are recognized by EMR, ASCA and EGK. Most complementary health insurance policies in Switzerland cover our services. Please check with your insurance provider for specific coverage details.</div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                How do I book an appointment?
+                            </button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">You can book an appointment online through our website by registering as a patient and selecting your preferred treatment. You can also call us at {{ site_settings.site_phone|default:"+41 79 290 77 44" }} or email {{ site_settings.site_email|default:"help@sarbach.swiss" }}.</div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                What types of treatments do you offer?
+                            </button>
+                        </h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">We offer a wide range of treatments including Ayurveda massages (Abhyangam, Shirodhara, Marma), Panchakarma cure programs (3 and 5 days), breathing therapy (Pranayama), Taiji Qigong, Singing Bowl therapy, pain relief treatments and musculoskeletal programs. Each treatment plan is customized based on your individual Dosha (body constitution).</div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                                Do you offer accommodation packages?
+                            </button>
+                        </h2>
+                        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">Yes, we offer various accommodation options in Leukerbad to complement your treatment program. From apartments to hotel rooms, we can arrange comfortable stays for the duration of your treatment.</div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                                In which languages can I receive consultation?
+                            </button>
+                        </h2>
+                        <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">Our team can provide consultations in German, English, French, Italian, and Russian. We also offer our website in multiple languages through our translation feature.</div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq6">
+                                What is Ayurveda?
+                            </button>
+                        </h2>
+                        <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">Ayurveda is an ancient Indian system of medicine that has been practiced for over 5,000 years. It is based on the belief that health and wellness depend on a delicate balance between the mind, body and spirit. Ayurveda uses natural therapies including herbal medicines, massage, diet and lifestyle changes to promote healing and well-being.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5" style="background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff;" data-aos="fade-up">
+    <div class="container text-center">
+        <h2 class="fw-bold mb-3">Ready to Start Your Healing Journey?</h2>
+        <p class="mb-4 opacity-75">Contact us today to schedule a consultation or learn more about our treatments.</p>
+        <a href="{% url 'appointment' %}" class="btn btn-light btn-lg px-4 me-2"><i class="fas fa-calendar-check me-2"></i>Book Appointment</a>
+        <a href="https://wa.me/41792907744?text=Hello%2C%20I%20would%20like%20to%20book%20a%20consultation%20at%20SZG%20Sarbach." target="_blank" class="btn btn-lg px-4 me-2" style="background-color: #25D366; color: #fff; border: none;"><i class="fab fa-whatsapp me-2"></i>WhatsApp Us</a>
+        <a href="{% url 'contact' %}" class="btn btn-outline-light btn-lg px-4"><i class="fas fa-phone me-2"></i>Contact Us</a>
+    </div>
+</section>
+{% endblock %}

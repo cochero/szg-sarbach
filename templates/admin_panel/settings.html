@@ -1,0 +1,135 @@
+{% extends 'admin_panel/base_admin.html' %}
+
+{% block title %}Settings{% endblock %}
+{% block page_title %}Site Settings{% endblock %}
+
+{% block admin_content %}
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="card mb-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0"><i class="fas fa-cog me-2"></i>General Settings</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Site Name</label>
+                    <input type="text" class="form-control" name="site_name" value="{{ settings.site_name }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Site Email</label>
+                    <input type="email" class="form-control" name="site_email" value="{{ settings.site_email }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Site Phone</label>
+                    <input type="text" class="form-control" name="site_phone" value="{{ settings.site_phone }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Logo</label>
+                    <input type="file" class="form-control" name="logo" accept="image/*">
+                    {% if settings.logo %}
+                    <small class="text-muted">Current: {{ settings.logo.name }}</small>
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Favicon</label>
+                    <input type="file" class="form-control" name="favicon" accept="image/*">
+                    {% if settings.favicon %}
+                    <small class="text-muted">Current: {{ settings.favicon.name }}</small>
+                    {% endif %}
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Site Address</label>
+                    <textarea class="form-control" name="site_address" rows="2">{{ settings.site_address }}</textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0"><i class="fas fa-certificate me-2"></i>Certification Numbers</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">EMR Nr.</label>
+                    <input type="text" class="form-control" name="emr_nr" value="{{ settings.emr_nr }}">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">ZSR Nr.</label>
+                    <input type="text" class="form-control" name="zsr_nr" value="{{ settings.zsr_nr }}">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">ASCA ID</label>
+                    <input type="text" class="form-control" name="asca_id" value="{{ settings.asca_id }}">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">EGK Nr.</label>
+                    <input type="text" class="form-control" name="egk_nr" value="{{ settings.egk_nr }}">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">GLN Nr.</label>
+                    <input type="text" class="form-control" name="gln_nr" value="{{ settings.gln_nr }}">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0"><i class="fas fa-share-alt me-2"></i>Social Media Links</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label"><i class="fab fa-facebook me-1"></i>Facebook URL</label>
+                    <input type="url" class="form-control" name="facebook_url" value="{{ settings.facebook_url }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label"><i class="fab fa-twitter me-1"></i>Twitter URL</label>
+                    <input type="url" class="form-control" name="twitter_url" value="{{ settings.twitter_url }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label"><i class="fab fa-linkedin me-1"></i>LinkedIn URL</label>
+                    <input type="url" class="form-control" name="linkedin_url" value="{{ settings.linkedin_url }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label"><i class="fab fa-instagram me-1"></i>Instagram URL</label>
+                    <input type="url" class="form-control" name="instagram_url" value="{{ settings.instagram_url }}">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>About Page Content</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-8">
+                    <label class="form-label">About Title</label>
+                    <input type="text" class="form-control" name="about_title" value="{{ settings.about_title }}">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">About Image</label>
+                    <input type="file" class="form-control" name="about_image" accept="image/*">
+                    {% if settings.about_image %}
+                    <small class="text-muted">Current: {{ settings.about_image.name }}</small>
+                    {% endif %}
+                </div>
+                <div class="col-12">
+                    <label class="form-label">About Content</label>
+                    <textarea class="form-control" name="about_content" rows="6">{{ settings.about_content }}</textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-4">
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save me-1"></i> Save Settings</button>
+    </div>
+</form>
+{% endblock %}

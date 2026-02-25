@@ -1,0 +1,168 @@
+{% extends 'admin_panel/base_admin.html' %}
+
+{% block title %}Addons{% endblock %}
+{% block page_title %}Addons{% endblock %}
+
+{% block admin_content %}
+<div class="card">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="fas fa-puzzle-piece me-2"></i>Addons</h5>
+        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addAddonModal">
+            <i class="fas fa-plus me-1"></i> Add Addon
+        </button>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Image</th>
+                        <th>Title</th>
+                        <th>Price</th>
+                        <th>Duration</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for a in addons %}
+                    <tr id="addon-row-{{ a.id }}">
+                        <td>{{ forloop.counter }}</td>
+                        <td>{% if a.image %}<img src="{{ a.image.url }}" width="50" height="40" class="rounded" style="object-fit:cover;">{% else %}-{% endif %}</td>
+                        <td><strong>{{ a.title }}</strong></td>
+                        <td>CHF {{ a.price }}</td>
+                        <td>{{ a.duration|default:"-" }}</td>
+                        <td>
+                            <span class="badge {% if a.is_active %}badge-active{% else %}badge-inactive{% endif %}">
+                                {{ a.is_active|yesno:"Active,Inactive" }}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary" onclick="editAddon({{ a.id }}, '{{ a.title|escapejs }}', '{{ a.description|escapejs }}', '{{ a.price }}', '{{ a.duration|escapejs }}')"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-sm btn-outline-success" onclick="toggleAddon({{ a.id }}, '{% if a.is_active %}Disable{% else %}Enable{% endif %}')">
+                                <i class="fas fa-{% if a.is_active %}toggle-on{% else %}toggle-off{% endif %}"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteAddon({{ a.id }})"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="7" class="text-center text-muted py-4">No addons found</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addAddonModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="{% url 'admin_addon_submit' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-plus me-2"></i>Add Addon</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label class="form-label">Title</label>
+                            <input type="text" class="form-control" name="ad_title" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Price (CHF)</label>
+                            <input type="number" step="0.01" class="form-control" name="ad_price" value="0">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Duration</label>
+                            <input type="text" class="form-control" name="ad_duration">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Image</label>
+                            <input type="file" class="form-control" name="ad_img" accept="image/*">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" name="ad_desc" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Addon</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editAddonModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="{% url 'admin_addon_update' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="ad_id" id="edit_ad_id">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-edit me-2"></i>Edit Addon</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label class="form-label">Title</label>
+                            <input type="text" class="form-control" name="ad_title" id="edit_ad_title" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Price (CHF)</label>
+                            <input type="number" step="0.01" class="form-control" name="ad_price" id="edit_ad_price">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Duration</label>
+                            <input type="text" class="form-control" name="ad_duration" id="edit_ad_duration">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Image</label>
+                            <input type="file" class="form-control" name="ad_img" accept="image/*">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" name="ad_desc" id="edit_ad_desc" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Addon</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function editAddon(id, title, desc, price, duration) {
+    document.getElementById('edit_ad_id').value = id;
+    document.getElementById('edit_ad_title').value = title;
+    document.getElementById('edit_ad_desc').value = desc;
+    document.getElementById('edit_ad_price').value = price;
+    document.getElementById('edit_ad_duration').value = duration;
+    new bootstrap.Modal(document.getElementById('editAddonModal')).show();
+}
+function toggleAddon(id, st) {
+    fetch("{% url 'admin_addon_toggle' %}", {
+        method: 'POST', headers: {'X-CSRFToken': csrftoken, 'Content-Type': 'application/x-www-form-urlencoded'},
+        body: 'id=' + id + '&st=' + st
+    }).then(r => r.json()).then(d => { if(d.success) location.reload(); });
+}
+function deleteAddon(id) {
+    if(!confirm('Are you sure?')) return;
+    fetch("{% url 'admin_addon_delete' %}", {
+        method: 'POST', headers: {'X-CSRFToken': csrftoken, 'Content-Type': 'application/x-www-form-urlencoded'},
+        body: 'id=' + id
+    }).then(r => r.json()).then(d => { if(d.success) document.getElementById('addon-row-' + id).remove(); });
+}
+</script>
+{% endblock %}

@@ -1,0 +1,911 @@
+[
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$MZDzrPqBSXwfts8AgfUcHj$LaleQzL2FNrC6bDlsZvGgSRjbWziAXuvKbZCb98BhlA=",
+    "last_login": "2026-02-20T09:04:01.082Z",
+    "is_superuser": true,
+    "username": "admin",
+    "first_name": "",
+    "last_name": "",
+    "email": "admin@sarbach.swiss",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-02-20T06:55:13.821Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "core.sitesettings",
+  "pk": 1,
+  "fields": {
+    "site_name": "SZG Sarbach Gesundheitszentrum",
+    "site_email": "help@sarbach.swiss",
+    "site_phone": "+41 79 290 77 44",
+    "site_address": "Dorfstrasse 23, CH-3954 Leukerbad",
+    "logo": "",
+    "favicon": "",
+    "emr_nr": "26054",
+    "zsr_nr": "B494360",
+    "asca_id": "106773",
+    "egk_nr": "42736",
+    "gln_nr": "7601002563383",
+    "facebook_url": "",
+    "twitter_url": "",
+    "linkedin_url": "",
+    "instagram_url": "",
+    "about_title": "SZG Sarbach Gesundheitszentrum",
+    "about_content": "",
+    "about_image": ""
+  }
+},
+{
+  "model": "core.userprofile",
+  "pk": 1,
+  "fields": {
+    "user": [
+      "admin"
+    ],
+    "role": "superadmin",
+    "phone": "",
+    "profile_image": "images/user.png",
+    "gender": "",
+    "age": null,
+    "dob": null,
+    "street": "",
+    "street_number": "",
+    "plz": "",
+    "city": "",
+    "state": "",
+    "basic_insurance": "",
+    "complementary_insurance": "",
+    "signature": "",
+    "registration_date": "2026-02-20",
+    "is_active": true
+  }
+},
+{
+  "model": "core.banner",
+  "pk": 1,
+  "fields": {
+    "title": "A Gift For Your Loved Ones",
+    "image": "banners/slider-1.jpg",
+    "description": "Buy a gift voucher for your loved ones.",
+    "link": "/packages/",
+    "is_active": true,
+    "order": 0
+  }
+},
+{
+  "model": "core.banner",
+  "pk": 2,
+  "fields": {
+    "title": "Welcome to Sarbach Health Center",
+    "image": "banners/slider-2.jpg",
+    "description": "Ayurveda - The Science of Life",
+    "link": "/departments/ayurveda-treatments-massages/",
+    "is_active": true,
+    "order": 0
+  }
+},
+{
+  "model": "core.banner",
+  "pk": 3,
+  "fields": {
+    "title": "Ayurveda Treatments for Complete Relaxation",
+    "image": "banners/slider-3.jpg",
+    "description": "Panchakarma Treatments for Rejuvenation and Healthy Life",
+    "link": "/departments/ayurveda-cure-programs/",
+    "is_active": true,
+    "order": 0
+  }
+},
+{
+  "model": "core.banner",
+  "pk": 4,
+  "fields": {
+    "title": "Body - Mind - Soul in Balance",
+    "image": "banners/slider-4.jpg",
+    "description": "Be Healthy - Stay Balanced ... Naturally",
+    "link": "/about/",
+    "is_active": true,
+    "order": 0
+  }
+},
+{
+  "model": "core.banner",
+  "pk": 5,
+  "fields": {
+    "title": "Ayurveda foot massage and bath",
+    "image": "banners/slider-5.jpg",
+    "description": "Stimulating Foot Massage with warm Ayurveda Oil.",
+    "link": "/departments/ayurveda-treatments-massages/",
+    "is_active": true,
+    "order": 0
+  }
+},
+{
+  "model": "core.banner",
+  "pk": 6,
+  "fields": {
+    "title": "The Healing Power of Nature",
+    "image": "banners/slider-6.jpg",
+    "description": "Authentic, Natural Products from India",
+    "link": "/packages/",
+    "is_active": true,
+    "order": 0
+  }
+},
+{
+  "model": "clinic.city",
+  "pk": 1,
+  "fields": {
+    "name": "Leukerbad"
+  }
+},
+{
+  "model": "clinic.department",
+  "pk": 1,
+  "fields": {
+    "name": "Ayurveda treatments & massages",
+    "slug": "ayurveda-treatments-massages",
+    "dept_type": "deps",
+    "icon": "",
+    "description": "",
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.department",
+  "pk": 2,
+  "fields": {
+    "name": "Ayurveda Cure programs",
+    "slug": "ayurveda-cure-programs",
+    "dept_type": "deps",
+    "icon": "",
+    "description": "",
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.department",
+  "pk": 3,
+  "fields": {
+    "name": "Musculosceletal system program",
+    "slug": "musculosceletal-system-program",
+    "dept_type": "deps",
+    "icon": "",
+    "description": "",
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.department",
+  "pk": 4,
+  "fields": {
+    "name": "Pranayama - Respiratory Therapy",
+    "slug": "pranayama-respiratory-therapy",
+    "dept_type": "deps",
+    "icon": "",
+    "description": "",
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.department",
+  "pk": 5,
+  "fields": {
+    "name": "Taiji Qigong",
+    "slug": "taiji-qigong",
+    "dept_type": "deps",
+    "icon": "",
+    "description": "",
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.department",
+  "pk": 6,
+  "fields": {
+    "name": "Singing Bowl Therapy",
+    "slug": "singing-bowl-therapy",
+    "dept_type": "deps",
+    "icon": "",
+    "description": "",
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.department",
+  "pk": 7,
+  "fields": {
+    "name": "Pain Relief treatment",
+    "slug": "pain-relief-treatment",
+    "dept_type": "deps",
+    "icon": "",
+    "description": "",
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.department",
+  "pk": 8,
+  "fields": {
+    "name": "Sinus Problems",
+    "slug": "sinus-problems",
+    "dept_type": "symptoms",
+    "icon": "",
+    "description": "",
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.department",
+  "pk": 9,
+  "fields": {
+    "name": "Skin diseases",
+    "slug": "skin-diseases",
+    "dept_type": "symptoms",
+    "icon": "",
+    "description": "",
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.department",
+  "pk": 10,
+  "fields": {
+    "name": "Sleeplessness",
+    "slug": "sleeplessness",
+    "dept_type": "symptoms",
+    "icon": "",
+    "description": "",
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.department",
+  "pk": 11,
+  "fields": {
+    "name": "Spondylistis",
+    "slug": "spondylistis",
+    "dept_type": "symptoms",
+    "icon": "",
+    "description": "",
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.department",
+  "pk": 12,
+  "fields": {
+    "name": "Stress and burnout",
+    "slug": "stress-and-burnout",
+    "dept_type": "symptoms",
+    "icon": "",
+    "description": "",
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.department",
+  "pk": 13,
+  "fields": {
+    "name": "Sports problems",
+    "slug": "sports-problems",
+    "dept_type": "symptoms",
+    "icon": "",
+    "description": "",
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.department",
+  "pk": 14,
+  "fields": {
+    "name": "Allergic respiratory diseases and Asthma",
+    "slug": "allergic-respiratory-diseases-and-asthma",
+    "dept_type": "symptoms",
+    "icon": "",
+    "description": "",
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.department",
+  "pk": 15,
+  "fields": {
+    "name": "Arthristis",
+    "slug": "arthristis",
+    "dept_type": "symptoms",
+    "icon": "",
+    "description": "",
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.department",
+  "pk": 16,
+  "fields": {
+    "name": "Back pain",
+    "slug": "back-pain",
+    "dept_type": "symptoms",
+    "icon": "",
+    "description": "",
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.department",
+  "pk": 17,
+  "fields": {
+    "name": "Emotional Imbalances",
+    "slug": "emotional-imbalances",
+    "dept_type": "symptoms",
+    "icon": "",
+    "description": "",
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.department",
+  "pk": 18,
+  "fields": {
+    "name": "Frozen shoulder",
+    "slug": "frozen-shoulder",
+    "dept_type": "symptoms",
+    "icon": "",
+    "description": "",
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.department",
+  "pk": 19,
+  "fields": {
+    "name": "Gynaecological disorders",
+    "slug": "gynaecological-disorders",
+    "dept_type": "symptoms",
+    "icon": "",
+    "description": "",
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.department",
+  "pk": 20,
+  "fields": {
+    "name": "Knee joint pain",
+    "slug": "knee-joint-pain",
+    "dept_type": "symptoms",
+    "icon": "",
+    "description": "",
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.department",
+  "pk": 21,
+  "fields": {
+    "name": "Migraine",
+    "slug": "migraine",
+    "dept_type": "symptoms",
+    "icon": "",
+    "description": "",
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.department",
+  "pk": 22,
+  "fields": {
+    "name": "Neck stiffness and pain",
+    "slug": "neck-stiffness-and-pain",
+    "dept_type": "symptoms",
+    "icon": "",
+    "description": "",
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.department",
+  "pk": 23,
+  "fields": {
+    "name": "Obesity and over weight",
+    "slug": "obesity-and-over-weight",
+    "dept_type": "symptoms",
+    "icon": "",
+    "description": "",
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.department",
+  "pk": 24,
+  "fields": {
+    "name": "Post Covid problems",
+    "slug": "post-covid-problems",
+    "dept_type": "symptoms",
+    "icon": "",
+    "description": "",
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.department",
+  "pk": 25,
+  "fields": {
+    "name": "Sciatica",
+    "slug": "sciatica",
+    "dept_type": "symptoms",
+    "icon": "",
+    "description": "",
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.treatment",
+  "pk": 1,
+  "fields": {
+    "name": "Abhyangam",
+    "slug": "abhyangam",
+    "department": 1,
+    "image": "treatments/Abhyangam.jpg",
+    "description": "Most popular massage Treatment in Ayurveda! Full body massage, including head, face and foot massage with warm Ayurveda oil. Improves blood circulation, relieves muscle tension, promotes relaxation and rejuvenation. Duration: 60 minutes.",
+    "short_description": "",
+    "price": "130.00",
+    "duration_days": 1,
+    "is_featured": true,
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.treatment",
+  "pk": 2,
+  "fields": {
+    "name": "Ayurveda foot massage and bath",
+    "slug": "ayurveda-foot-massage-and-bath",
+    "department": 1,
+    "image": "treatments/Ayurvedha_foot_massage_spa_(1).jpg",
+    "description": "Foot bath with herbs or flowers and stimulating foot massage with Ayurveda warm oil. Relieves stress, improves circulation and promotes deep relaxation. Duration: 45 minutes.",
+    "short_description": "",
+    "price": "90.00",
+    "duration_days": 1,
+    "is_featured": true,
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.treatment",
+  "pk": 3,
+  "fields": {
+    "name": "Hot Stone Treatment",
+    "slug": "hot-stone-treatment",
+    "department": 1,
+    "image": "treatments/Hot_Stone_Treatment.jpg",
+    "description": "A treatment with hot volcanic stones and full body massage, including head, face and foot massage. The heat from the stones penetrates deep into muscles, relieving tension and promoting healing. Duration: 75 minutes.",
+    "short_description": "",
+    "price": "155.00",
+    "duration_days": 1,
+    "is_featured": true,
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.treatment",
+  "pk": 4,
+  "fields": {
+    "name": "Kizhi neck and spine",
+    "slug": "kizhi-neck-and-spine",
+    "department": 1,
+    "image": "treatments/Kizhi_neck_and_spine.jpg",
+    "description": "Densely packed bags of Indian herbs, warmed in special oil and applied to the neck and spine area. Helps relieve stiffness, pain and inflammation in the cervical and spinal region. Duration: 60 minutes.",
+    "short_description": "",
+    "price": "145.00",
+    "duration_days": 1,
+    "is_featured": true,
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.treatment",
+  "pk": 5,
+  "fields": {
+    "name": "Marma",
+    "slug": "marma",
+    "department": 1,
+    "image": "treatments/Marma_.jpg",
+    "description": "Energizing full body massage, including head, face and foot massage based on MARMA points (vital energy points). Balances the body's energy flow and promotes healing. Duration: 60 minutes.",
+    "short_description": "",
+    "price": "130.00",
+    "duration_days": 1,
+    "is_featured": true,
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.treatment",
+  "pk": 6,
+  "fields": {
+    "name": "Nasiyam",
+    "slug": "nasiyam",
+    "department": 1,
+    "image": "treatments/Nasyam_.jpg",
+    "description": "A treatment that helps relieve sinusitis, chronic headaches and migraines. Includes facial massage and nasal administration of medicated oils for deep cleansing. Duration: 45 minutes.",
+    "short_description": "",
+    "price": "145.00",
+    "duration_days": 1,
+    "is_featured": true,
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.treatment",
+  "pk": 7,
+  "fields": {
+    "name": "Back and neck massage",
+    "slug": "back-and-neck-massage",
+    "department": 1,
+    "image": "treatments/Back_and_neck_massage.jpg",
+    "description": "A treatment that helps to relieve stiffness of back, shoulder and neck muscles. Targeted massage with warm Ayurvedic oils for pain relief and relaxation. Duration: 45 minutes.",
+    "short_description": "",
+    "price": "90.00",
+    "duration_days": 1,
+    "is_featured": true,
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.treatment",
+  "pk": 8,
+  "fields": {
+    "name": "Shirodhara - Thyladhara",
+    "slug": "shirodhara-thyladhara",
+    "department": 1,
+    "image": "treatments/shirodhara.jpg",
+    "description": "Very relaxing Kerala special Ayurvedic treatment with lukewarm oil gently flowing over the forehead. Calms the mind, reduces stress and anxiety, improves sleep quality. Duration: 75 minutes.",
+    "short_description": "",
+    "price": "165.00",
+    "duration_days": 1,
+    "is_featured": true,
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.treatment",
+  "pk": 9,
+  "fields": {
+    "name": "Swasthya relaxation massage",
+    "slug": "swasthya-relaxation-massage",
+    "department": 1,
+    "image": "treatments/Swastha_relation_massage_(1).jpg",
+    "description": "Gentle and relaxing full body massage including head, face and foot massage to manage stress, improve blood circulation and promote overall well-being. Duration: 60 minutes.",
+    "short_description": "",
+    "price": "130.00",
+    "duration_days": 1,
+    "is_featured": true,
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.treatment",
+  "pk": 10,
+  "fields": {
+    "name": "Udwarthanam",
+    "slug": "udwarthanam",
+    "department": 1,
+    "image": "treatments/Udwarthanam.jpg",
+    "description": "Herbal powder full body massage (without oil) that helps reduce body weight and improves skin texture. The upward stroking technique stimulates metabolism. Duration: 60 minutes.",
+    "short_description": "",
+    "price": "120.00",
+    "duration_days": 1,
+    "is_featured": true,
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.treatment",
+  "pk": 11,
+  "fields": {
+    "name": "Complete Diagnosis",
+    "slug": "complete-diagnosis",
+    "department": 1,
+    "image": "treatments/Complete_Diagnosis.jpg",
+    "description": "Vata, Pitta, Kapha and its various combinations are the body types (Doshas) of Ayurveda. Complete diagnosis to determine your body constitution and personalized treatment plan. Duration: 30 minutes.",
+    "short_description": "",
+    "price": "70.00",
+    "duration_days": 1,
+    "is_featured": true,
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.treatment",
+  "pk": 12,
+  "fields": {
+    "name": "Cure 3 days",
+    "slug": "cure-3-days",
+    "department": 2,
+    "image": "treatments/Cure_3_Days.jpg",
+    "description": "3-day intensive Ayurveda cure program including daily treatments, consultation, diet recommendations and personalized therapy plan for rejuvenation and healing.",
+    "short_description": "",
+    "price": "460.00",
+    "duration_days": 3,
+    "is_featured": true,
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.treatment",
+  "pk": 13,
+  "fields": {
+    "name": "Cure 5 days",
+    "slug": "cure-5-days",
+    "department": 2,
+    "image": "treatments/Cure_5_Days.jpg",
+    "description": "5-day comprehensive Ayurveda cure program with daily treatments, detailed consultation, dietary guidance and holistic therapy plan for deep detoxification and renewal.",
+    "short_description": "",
+    "price": "800.00",
+    "duration_days": 5,
+    "is_featured": true,
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.treatment",
+  "pk": 14,
+  "fields": {
+    "name": "Movements exercises",
+    "slug": "movements-exercises",
+    "department": 3,
+    "image": "treatments/Movements_exercises.jpg",
+    "description": "Therapeutic movement exercises designed to strengthen the musculoskeletal system, improve flexibility and promote joint health.",
+    "short_description": "",
+    "price": "90.00",
+    "duration_days": 1,
+    "is_featured": true,
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.treatment",
+  "pk": 15,
+  "fields": {
+    "name": "Pranayama the breathing therapy",
+    "slug": "pranayama-the-breathing-therapy",
+    "department": 4,
+    "image": "treatments/Pranayama_the_breathing_therapy.jpg",
+    "description": "Ancient breathing techniques to improve respiratory health, reduce stress and increase vital energy. Includes guided breathing exercises and meditation.",
+    "short_description": "",
+    "price": "70.00",
+    "duration_days": 1,
+    "is_featured": true,
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.treatment",
+  "pk": 16,
+  "fields": {
+    "name": "Find harmony in the body and a calm mind with Taiji and Qigong",
+    "slug": "find-harmony-in-the-body-and-a-calm-mind-with-taiji-and-qigong",
+    "department": 5,
+    "image": "treatments/Find_harmony_in_the_body.jpg",
+    "description": "Gentle, flowing movements combining Taiji and Qigong principles to harmonize body and mind. Improves balance, flexibility and inner peace.",
+    "short_description": "",
+    "price": "70.00",
+    "duration_days": 1,
+    "is_featured": true,
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.treatment",
+  "pk": 17,
+  "fields": {
+    "name": "Singing bowl therapy",
+    "slug": "singing-bowl-therapy",
+    "department": 6,
+    "image": "treatments/tibetan-singing-bowl-2023-11-27-05-24-26-utc.jpg",
+    "description": "Tibetan singing bowl therapy using sound vibrations to promote deep relaxation, reduce stress and restore energy balance in the body.",
+    "short_description": "",
+    "price": "90.00",
+    "duration_days": 1,
+    "is_featured": true,
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.treatment",
+  "pk": 18,
+  "fields": {
+    "name": "Pain Relief Treatment",
+    "slug": "pain-relief-treatment",
+    "department": 7,
+    "image": "treatments/sciatic-nerve-inflammation-lower-back-pain-2023-11-27-05-11-10-utc.jpg",
+    "description": "Specialized treatment for chronic pain relief using targeted techniques including sciatic nerve treatment, joint pain management and muscle therapy.",
+    "short_description": "",
+    "price": "120.00",
+    "duration_days": 1,
+    "is_featured": true,
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.doctor",
+  "pk": 1,
+  "fields": {
+    "user_profile": null,
+    "name": "Bevinsingh Govinda Hari Singh",
+    "login_username": "bevin",
+    "password_hash": "",
+    "image": "doctors/Bevin_800x600.png",
+    "qualification": "BAMS (Bachelor of Ayurvedic Medicine and Surgery)",
+    "specialization": "Ayurveda Specialist",
+    "contact_number": "+41 79 290 77 44",
+    "email": "help@sarbach.swiss",
+    "address": "Dorfstrasse 23, CH-3954 Leukerbad",
+    "department": 1,
+    "city": null,
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.doctor",
+  "pk": 3,
+  "fields": {
+    "user_profile": null,
+    "name": "Meier",
+    "login_username": "meier",
+    "password_hash": "",
+    "image": "doctors/doctor.jpg",
+    "qualification": "Schmerztherapeutin",
+    "specialization": "Pain Relief treatment",
+    "contact_number": "+41 79 290 77 44",
+    "email": "help@sarbach.swiss",
+    "address": "Dorfstrasse 23, CH-3954 Leukerbad",
+    "department": 7,
+    "city": null,
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.hotel",
+  "pk": 2,
+  "fields": {
+    "name": "LA PROMENADE, 2.5 room apartment with south-west balcony in the center",
+    "city": 1,
+    "address": "Appartementhaus La Promenade, La Promenade 5, 3954 Leukerbad",
+    "hotel_type": "Apartment",
+    "phone": "+41 79 290 77 44",
+    "rates": "CHF 160 per day",
+    "description": "<p>Bright very well kept 2.5 room flat on the 3rd floor, very well maintained in central location, furnished, approx. 50m², built 1994, south-west facing balcony with beautiful view, open nice kitchen with dishwasher, spacious living-dining room with sofa and exit to the south-west facing balcony, cosy bedroom, bathroom with bathtub/WC, safe, underfloor heating, ski room with ski locker, lift.</p>\n<h5 class=\"mt-4 mb-3\">Characteristics</h5>\n<table class=\"table table-sm\">\n<tr><td class=\"text-muted\">Surface</td><td>approx. 50 m²</td></tr>\n<tr><td class=\"text-muted\">Year of construction</td><td>1994</td></tr>\n<tr><td class=\"text-muted\">Number of rooms</td><td>2.5</td></tr>\n<tr><td class=\"text-muted\">Number of bedrooms</td><td>1</td></tr>\n<tr><td class=\"text-muted\">Number of bathrooms</td><td>1 (WC/Bathtub)</td></tr>\n<tr><td class=\"text-muted\">Balcony</td><td>1</td></tr>\n<tr><td class=\"text-muted\">State</td><td>Very good</td></tr>\n<tr><td class=\"text-muted\">Type of heating</td><td>Heating oil, floor heating</td></tr>\n<tr><td class=\"text-muted\">Availability</td><td>From now on</td></tr>\n<tr><td class=\"text-muted\">Laundry</td><td>CHF 25 per person</td></tr>\n<tr><td class=\"text-muted\">Final cleaning</td><td>CHF 120.00</td></tr>\n</table>\n<p><a href=\"https://momento360.com/e/uc/6b7ad6cbc1994179902d213e0917d220\" target=\"_blank\" class=\"btn btn-sm btn-outline-primary\"><i class=\"fas fa-vr-cardboard me-1\"></i> 360° Virtual Tour</a></p>\n<p><a href=\"https://www.google.ch/maps/place/Promenade+5,+3954+Leukerbad/\" target=\"_blank\" class=\"btn btn-sm btn-outline-secondary\"><i class=\"fas fa-map-marker-alt me-1\"></i> View on Google Maps</a></p>",
+    "image": "accommodations/promenade_25.jpg",
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.hotel",
+  "pk": 3,
+  "fields": {
+    "name": "Apartment Baron, partly renovated 1.5 room apartment, nice view",
+    "city": 1,
+    "address": "Appartementhaus Baron, Gribelierstrasse 1, 3954 Leukerbad",
+    "hotel_type": "Apartment",
+    "phone": "+41 79 290 77 44",
+    "rates": "CHF 120 per day",
+    "description": "<p>1.5-room apartment, 4th floor, next to the bus stop, approx. 37m², well-kept, south-west facing balcony with a beautiful view, entrance, small kitchen, large living room, built in 1978, dining room and separate sleeping area with double bed, bathroom with shower/toilet, ski cupboard. Garage.</p>\n<h5 class=\"mt-4 mb-3\">Characteristics</h5>\n<table class=\"table table-sm\">\n<tr><td class=\"text-muted\">Surface</td><td>approx. 37 m²</td></tr>\n<tr><td class=\"text-muted\">Year of construction</td><td>1978</td></tr>\n<tr><td class=\"text-muted\">Number of rooms</td><td>1.5</td></tr>\n<tr><td class=\"text-muted\">Number of bedrooms</td><td>1</td></tr>\n<tr><td class=\"text-muted\">Number of bathrooms</td><td>1</td></tr>\n<tr><td class=\"text-muted\">Balcony</td><td>1</td></tr>\n<tr><td class=\"text-muted\">Garage</td><td>CHF 10 per day</td></tr>\n<tr><td class=\"text-muted\">Ski locker</td><td>1</td></tr>\n<tr><td class=\"text-muted\">Type of heating</td><td>Heating oil</td></tr>\n<tr><td class=\"text-muted\">Availability</td><td>From now on</td></tr>\n</table>\n<p><a href=\"https://momento360.com/e/uc/12bbc741324443729c977eea516b00a2\" target=\"_blank\" class=\"btn btn-sm btn-outline-primary\"><i class=\"fas fa-vr-cardboard me-1\"></i> 360° Panoramic View</a></p>\n<p><a href=\"https://www.google.ch/maps/place/Gribelierstrasse+1,+3954+Leukerbad/\" target=\"_blank\" class=\"btn btn-sm btn-outline-secondary\"><i class=\"fas fa-map-marker-alt me-1\"></i> View on Google Maps</a></p>",
+    "image": "accommodations/baron.jpg",
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.hotel",
+  "pk": 4,
+  "fields": {
+    "name": "LA PROMENADE, spacious studio apartment, quiet place in the center",
+    "city": 1,
+    "address": "Appartementhaus La Promenade, La Promenade 5, 3954 Leukerbad",
+    "hotel_type": "Apartment",
+    "phone": "+41 79 290 77 44",
+    "rates": "CHF 90 per day",
+    "description": "<p>Bright studio north on the 3rd floor, very well maintained in central location, furnished, approx. 25m², built 1994, cosy living/bedroom area, kitchenette, bathroom with shower/WC, underfloor heating, ski room with ski locker, lift, cellar.</p>\n<h5 class=\"mt-4 mb-3\">Characteristics</h5>\n<table class=\"table table-sm\">\n<tr><td class=\"text-muted\">Surface</td><td>approx. 25 m²</td></tr>\n<tr><td class=\"text-muted\">Year of construction</td><td>1994</td></tr>\n<tr><td class=\"text-muted\">Number of rooms</td><td>Studio</td></tr>\n<tr><td class=\"text-muted\">Type of heating</td><td>Floor heating</td></tr>\n<tr><td class=\"text-muted\">Availability</td><td>From now on</td></tr>\n</table>\n<p><a href=\"https://immobilienleukerbad.ch/verkauf/standorte/la-promenade/index.htm\" target=\"_blank\" class=\"btn btn-sm btn-outline-secondary\"><i class=\"fas fa-map-marker-alt me-1\"></i> View on Google Maps</a></p>",
+    "image": "accommodations/promenade_studio.jpg",
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.gallery",
+  "pk": 1,
+  "fields": {
+    "gallery_type": "hotel",
+    "related_id": 2,
+    "image": "accommodations/promenade_25_interior1.jpg"
+  }
+},
+{
+  "model": "clinic.gallery",
+  "pk": 2,
+  "fields": {
+    "gallery_type": "hotel",
+    "related_id": 2,
+    "image": "accommodations/promenade_25_interior2.jpg"
+  }
+},
+{
+  "model": "clinic.gallery",
+  "pk": 3,
+  "fields": {
+    "gallery_type": "hotel",
+    "related_id": 2,
+    "image": "accommodations/promenade_25_interior3.jpg"
+  }
+},
+{
+  "model": "clinic.gallery",
+  "pk": 4,
+  "fields": {
+    "gallery_type": "hotel",
+    "related_id": 2,
+    "image": "accommodations/promenade_25_interior4.jpg"
+  }
+},
+{
+  "model": "clinic.gallery",
+  "pk": 5,
+  "fields": {
+    "gallery_type": "hotel",
+    "related_id": 4,
+    "image": "accommodations/promenade_studio_interior3.jpg"
+  }
+},
+{
+  "model": "clinic.addon",
+  "pk": 1,
+  "fields": {
+    "title": "Breathing therapy - Pranayama",
+    "image": "addons/20230519_121157.jpg",
+    "description": "Ancient breathing techniques for respiratory health and stress relief.",
+    "price": "17.00",
+    "duration": "",
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.addon",
+  "pk": 2,
+  "fields": {
+    "title": "Mandala",
+    "image": "addons/Add_on_service_3.jpg",
+    "description": "Creative mandala art therapy for mindfulness and inner peace.",
+    "price": "17.00",
+    "duration": "",
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.addon",
+  "pk": 3,
+  "fields": {
+    "title": "Mindfulness & meditation",
+    "image": "addons/Add_on_service_4.jpg",
+    "description": "Guided meditation sessions for mental clarity and relaxation.",
+    "price": "17.00",
+    "duration": "",
+    "is_active": true
+  }
+},
+{
+  "model": "clinic.addon",
+  "pk": 4,
+  "fields": {
+    "title": "Taichi-Qigong",
+    "image": "addons/Add_on_service_1.jpg",
+    "description": "Gentle flowing movements for balance, flexibility and inner harmony.",
+    "price": "17.00",
+    "duration": "",
+    "is_active": true
+  }
+}
+]
