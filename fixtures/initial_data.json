@@ -17,6 +17,40 @@
   }
 },
 {
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$lg0nJNou117p5yPcremCTp$7JYVU+ghFKT9UKKk0HHIzEjZp6ev3yeOV8EnrCzhCDk=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "dr.meier",
+    "first_name": "Dr.",
+    "last_name": "Meier",
+    "email": "meier@sarbach.swiss",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-03-08T19:25:40.563Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$5msuh7Qt0RCkwFT2x0mbez$VURuSXAF38FEdRPP1TCUN7lTUz+G1BkFCwlNcnfAt1w=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "dr.govinda",
+    "first_name": "Bevinsingh",
+    "last_name": "Govinda Hari Singh",
+    "email": "govinda@sarbach.swiss",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-03-08T19:25:40.852Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
   "model": "core.sitesettings",
   "pk": 1,
   "fields": {
@@ -62,6 +96,56 @@
     "complementary_insurance": "",
     "signature": "",
     "registration_date": "2026-02-20",
+    "is_active": true
+  }
+},
+{
+  "model": "core.userprofile",
+  "pk": 2,
+  "fields": {
+    "user": [
+      "dr.meier"
+    ],
+    "role": "doctor",
+    "phone": "",
+    "profile_image": "images/user.png",
+    "gender": "",
+    "age": null,
+    "dob": null,
+    "street": "",
+    "street_number": "",
+    "plz": "",
+    "city": "",
+    "state": "",
+    "basic_insurance": "",
+    "complementary_insurance": "",
+    "signature": "",
+    "registration_date": "2026-03-08",
+    "is_active": true
+  }
+},
+{
+  "model": "core.userprofile",
+  "pk": 3,
+  "fields": {
+    "user": [
+      "dr.govinda"
+    ],
+    "role": "doctor",
+    "phone": "",
+    "profile_image": "images/user.png",
+    "gender": "",
+    "age": null,
+    "dob": null,
+    "street": "",
+    "street_number": "",
+    "plz": "",
+    "city": "",
+    "state": "",
+    "basic_insurance": "",
+    "complementary_insurance": "",
+    "signature": "",
+    "registration_date": "2026-03-08",
     "is_active": true
   }
 },
@@ -736,7 +820,7 @@
   "model": "clinic.doctor",
   "pk": 1,
   "fields": {
-    "user_profile": null,
+    "user_profile": 3,
     "name": "Bevinsingh Govinda Hari Singh",
     "login_username": "bevin",
     "password_hash": "",
@@ -755,7 +839,7 @@
   "model": "clinic.doctor",
   "pk": 3,
   "fields": {
-    "user_profile": null,
+    "user_profile": 2,
     "name": "Meier",
     "login_username": "meier",
     "password_hash": "",
