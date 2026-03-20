@@ -827,6 +827,35 @@ def staff_list(request):
 
 
 @admin_required
+def user_management(request):
+    users = UserProfile.objects.select_related('user').all().order_by('role', 'user__username')
+    return render(request, 'admin_panel/user_management.html', {'users': users})
+
+
+@admin_required
+def user_reset_password(request):
+    if request.method == 'POST':
+        user_id = request.POST.get('user_id')
+        new_password = request.POST.get('new_password', '').strip()
+        confirm_password = request.POST.get('confirm_password', '').strip()
+        if not new_password:
+            messages.error(request, 'Password cannot be empty.')
+        elif new_password != confirm_password:
+            messages.error(request, 'Passwords do not match.')
+        elif len(new_password) < 6:
+            messages.error(request, 'Password must be at least 6 characters.')
+        else:
+            try:
+                user = User.objects.get(pk=user_id)
+                user.set_password(new_password)
+                user.save()
+                messages.success(request, f"Password for '{user.username}' has been reset successfully.")
+            except User.DoesNotExist:
+                messages.error(request, 'User not found.')
+    return redirect('admin_user_management')
+
+
+@admin_required
 def staff_submit(request):
     if request.method == 'POST':
         staff_img = request.FILES.get('staff_img')

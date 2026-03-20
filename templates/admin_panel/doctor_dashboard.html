@@ -17,6 +17,13 @@
         <a class="nav-link {% if request.resolver_match.url_name == 'doctor_appointments' %}active{% endif %}" href="{% url 'doctor_appointments' %}">
             <i class="fas fa-calendar-check"></i> Appointments
         </a>
+        <span class="nav-section">Account</span>
+        <a class="nav-link {% if request.resolver_match.url_name == 'change_password' %}active{% endif %}" href="{% url 'change_password' %}">
+            <i class="fas fa-key"></i> Change Password
+        </a>
+        <a class="nav-link" href="{% url 'logout' %}">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
     </div>
 </nav>
 {% endblock %}

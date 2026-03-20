@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, HttpResponse
@@ -183,6 +183,37 @@ def user_profile(request):
         messages.success(request, 'Profile updated successfully')
         return redirect('user_profile')
     return render(request, 'core/user_profile.html')
+
+
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        current_password = request.POST.get('current_password', '')
+        new_password = request.POST.get('new_password', '').strip()
+        confirm_password = request.POST.get('confirm_password', '').strip()
+        if not request.user.check_password(current_password):
+            messages.error(request, 'Current password is incorrect.')
+        elif not new_password:
+            messages.error(request, 'New password cannot be empty.')
+        elif len(new_password) < 6:
+            messages.error(request, 'New password must be at least 6 characters.')
+        elif new_password != confirm_password:
+            messages.error(request, 'New passwords do not match.')
+        else:
+            request.user.set_password(new_password)
+            request.user.save()
+            update_session_auth_hash(request, request.user)
+            messages.success(request, 'Your password has been changed successfully. You are still logged in.')
+            try:
+                role = request.user.profile.role
+                if role == 'doctor':
+                    return redirect('doctor_dashboard')
+                elif role in ('superadmin', 'frontdesk'):
+                    return redirect('admin_dashboard')
+            except Exception:
+                pass
+            return redirect('user_dashboard')
+    return render(request, 'core/change_password.html')
 
 
 def robots_txt(request):

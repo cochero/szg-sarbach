@@ -133,6 +133,9 @@
             <a class="nav-link {% if request.resolver_match.url_name == 'admin_staff_list' %}active{% endif %}" href="{% url 'admin_staff_list' %}">
                 <i class="fas fa-id-badge"></i> Staff
             </a>
+            <a class="nav-link {% if request.resolver_match.url_name == 'admin_user_management' %}active{% endif %}" href="{% url 'admin_user_management' %}">
+                <i class="fas fa-users-cog"></i> User Accounts
+            </a>
             <a class="nav-link {% if request.resolver_match.url_name == 'admin_settings' %}active{% endif %}" href="{% url 'admin_settings' %}">
                 <i class="fas fa-cog"></i> Settings
             </a>
@@ -148,9 +151,17 @@
                 </button>
                 <span class="page-title">{% block page_title %}Dashboard{% endblock %}</span>
             </div>
-            <div class="d-flex align-items-center">
-                <span class="me-3 text-muted"><i class="fas fa-user-shield"></i> {{ request.user.get_full_name|default:request.user.username }}</span>
-                <a href="{% url 'logout' %}" class="btn btn-sm btn-outline-danger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            <div class="d-flex align-items-center gap-2">
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                        <i class="fas fa-user-shield me-1"></i> {{ request.user.get_full_name|default:request.user.username }}
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{% url 'change_password' %}"><i class="fas fa-key me-2 text-warning"></i>Change Password</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
 
