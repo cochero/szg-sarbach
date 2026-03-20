@@ -51,6 +51,40 @@
   }
 },
 {
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$zLRQeP2e6MdsZeQIPdyzjB$n6glsTfti6B1VD3wQudJm02yBRi7I9PPwInjGF11qBs=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "receptionist",
+    "first_name": "Sara",
+    "last_name": "Müller",
+    "email": "receptionist@sarbach.swiss",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-03-20T20:24:55.529Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$2JaCSYHjNyzQpL31LsVg28$vB5jUZBVhm//EKNkyIa+pBaUyLZfUD7FeXnxdEdi+gE=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "patient.demo",
+    "first_name": "Hans",
+    "last_name": "Weber",
+    "email": "hans.weber@example.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-03-20T20:24:55.762Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
   "model": "core.sitesettings",
   "pk": 1,
   "fields": {
@@ -146,6 +180,56 @@
     "complementary_insurance": "",
     "signature": "",
     "registration_date": "2026-03-08",
+    "is_active": true
+  }
+},
+{
+  "model": "core.userprofile",
+  "pk": 4,
+  "fields": {
+    "user": [
+      "receptionist"
+    ],
+    "role": "frontdesk",
+    "phone": "+41 79 100 0001",
+    "profile_image": "images/user.png",
+    "gender": "",
+    "age": null,
+    "dob": null,
+    "street": "",
+    "street_number": "",
+    "plz": "",
+    "city": "",
+    "state": "",
+    "basic_insurance": "",
+    "complementary_insurance": "",
+    "signature": "",
+    "registration_date": "2026-03-20",
+    "is_active": true
+  }
+},
+{
+  "model": "core.userprofile",
+  "pk": 5,
+  "fields": {
+    "user": [
+      "patient.demo"
+    ],
+    "role": "patient",
+    "phone": "+41 79 200 0002",
+    "profile_image": "images/user.png",
+    "gender": "Male",
+    "age": 35,
+    "dob": null,
+    "street": "Bahnhofstrasse",
+    "street_number": "10",
+    "plz": "8001",
+    "city": "Zürich",
+    "state": "",
+    "basic_insurance": "",
+    "complementary_insurance": "",
+    "signature": "",
+    "registration_date": "2026-03-20",
     "is_active": true
   }
 },
