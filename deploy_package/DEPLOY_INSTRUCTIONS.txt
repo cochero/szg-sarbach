@@ -1,63 +1,77 @@
 ============================================================
-  SZG SARBACH - VPS DEPLOYMENT GUIDE (MySQL + Django)
+  SZG SARBACH GESUNDHEITSZENTRUM
+  VPS DEPLOYMENT GUIDE  (MySQL + Nginx + Gunicorn)
+  Last updated: March 2026
 ============================================================
 
 This guide walks you through deploying the SZG Sarbach
-Django application on your own VPS with MySQL and Nginx.
+Django application on your own VPS running Ubuntu/Debian
+with MySQL, Nginx, and Gunicorn.
 
 ============================================================
   WHAT'S IN THIS PACKAGE
 ============================================================
 
   szg_sarbach/          - Django project settings
-  core/                 - Core app (homepage, contacts, etc.)
-  clinic/               - Clinic app (doctors, staff, treatments)
-  appointments/         - Appointments app
-  shop/                 - Shop app
-  blog_app/             - Blog app
-  admin_panel/          - Custom admin panel
-  templates/            - HTML templates
+  core/                 - Core app (homepage, contacts, auth)
+  clinic/               - Clinic app (doctors, treatments, departments)
+  appointments/         - Appointments and examination records
+  shop/                 - Shop/pharmacy app
+  blog_app/             - Blog & events app
+  admin_panel/          - Custom admin panel (/panel/)
+  templates/            - All HTML templates (German by default)
   static/               - Static files (CSS, JS, images)
-  media/                - Uploaded media files
   manage.py             - Django management script
 
-  fixtures/             - Database data (all content pre-loaded)
-    initial_data.json   - Departments, treatments, doctors, banners, etc.
+  fixtures/initial_data.json
+    - 75 pre-loaded records: departments, treatments, doctors,
+      banners, site settings, staff accounts, etc.
 
   DEPLOYMENT FILES (in deploy_package/):
-  requirements.txt      - Python dependencies (MySQL version)
-  settings_production.py - Production settings for MySQL
-  .env.example          - Environment variables template
-  gunicorn.conf.py      - Gunicorn server configuration
-  nginx_sarbach.conf    - Nginx configuration
-  szg_sarbach.service   - Systemd service file
+  requirements.txt        - Python dependencies (MySQL version)
+  settings_production.py  - Production Django settings
+  .env.example            - Environment variables template
+  gunicorn.conf.py        - Gunicorn server configuration
+  nginx_sarbach.conf      - Nginx site configuration
+  szg_sarbach.service     - Systemd service file
+
+  IMPORTANT NOTES ON THIS VERSION:
+  - German is the default language (DE/EN/FR/IT/RU switcher in top bar)
+  - Patient self-registration and login are DISABLED
+  - Patient booking via /register/ or /appointment/ redirects to /contact/
+  - WhatsApp integration: +41 79 290 77 44 (floating button on all pages)
+  - Staff accounts are managed via /panel/users/ (Super Admin only)
+  - Staff/Doctor login: /welcome/admin/ and /doctor/
 
 
 ============================================================
   STEP 1: PREPARE YOUR VPS
 ============================================================
 
-Make sure you have these installed on your VPS:
+Minimum requirements:
+  - Ubuntu 22.04 LTS (or Debian 11+)
   - Python 3.11+
   - MySQL 8.0+
   - Nginx
-  - pip
+  - 1 GB RAM minimum (2 GB recommended)
 
-Install system dependencies needed for mysqlclient:
+Install system dependencies:
 
-  sudo apt update
-  sudo apt install python3-dev default-libmysqlclient-dev build-essential pkg-config nginx
+  sudo apt update && sudo apt upgrade -y
+  sudo apt install -y python3 python3-pip python3-venv \
+    default-libmysqlclient-dev build-essential pkg-config \
+    nginx unzip git
 
 
 ============================================================
   STEP 2: CREATE THE MySQL DATABASE
 ============================================================
 
-Log into MySQL:
+Log into MySQL as root:
 
   sudo mysql -u root -p
 
-Run these commands in the MySQL prompt:
+Run these SQL commands:
 
   CREATE DATABASE szg_sarbach CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
   CREATE USER 'sarbach_user'@'localhost' IDENTIFIED BY 'your_strong_password';
@@ -65,108 +79,115 @@ Run these commands in the MySQL prompt:
   FLUSH PRIVILEGES;
   EXIT;
 
+Replace 'your_strong_password' with a strong password and note it
+for the .env file in Step 4.
+
 
 ============================================================
-  STEP 3: UPLOAD AND SET UP THE PROJECT
+  STEP 3: GET THE PROJECT ONTO YOUR VPS
 ============================================================
 
-3a. Upload the zip file to your VPS (using scp from your
-    local machine):
+OPTION A — Clone from GitHub (recommended):
 
+  sudo mkdir -p /var/www/szg_sarbach
+  cd /var/www/szg_sarbach
+  git clone https://github.com/cochero/szg-sarbach.git .
+
+OPTION B — Upload a zip file:
+
+  # From your local machine:
   scp szg_sarbach_deploy.zip user@your-server-ip:/tmp/
 
-3b. On your VPS, extract and move to the web directory:
-
+  # On the VPS:
   sudo mkdir -p /var/www/szg_sarbach
   cd /var/www/szg_sarbach
   sudo unzip /tmp/szg_sarbach_deploy.zip
 
-3c. Create a Python virtual environment:
+Create a Python virtual environment:
 
   python3 -m venv venv
   source venv/bin/activate
 
-3d. Install Python dependencies:
+Install Python dependencies:
 
   pip install -r deploy_package/requirements.txt
 
 
 ============================================================
-  STEP 4: CONFIGURE SETTINGS
+  STEP 4: CONFIGURE ENVIRONMENT AND SETTINGS
 ============================================================
 
-4a. Copy the production settings file into the project:
+4a. Copy the production settings into the project:
 
   cp deploy_package/settings_production.py szg_sarbach/settings_production.py
 
   NOTE: This does NOT overwrite the original settings.py.
-  The systemd service is configured to use this file
-  automatically via DJANGO_SETTINGS_MODULE.
+  The systemd service uses DJANGO_SETTINGS_MODULE to select it.
 
 4b. Create your .env file from the template:
 
   cp deploy_package/.env.example .env
-
-4c. Edit the .env file with your actual values:
-
   nano .env
 
-  Fill in:
-  - DJANGO_SECRET_KEY: (REQUIRED - the app will NOT start without it)
-    Generate one with:
-      python3 -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
-  - ALLOWED_HOSTS: Your domain name(s), comma-separated
-  - DB_NAME: szg_sarbach
-  - DB_USER: sarbach_user  (or whatever you created in Step 2)
-  - DB_PASSWORD: the password from Step 2
-  - DB_HOST: localhost
-  - DB_PORT: 3306
+  Fill in all values:
 
-4d. Copy the Gunicorn config:
+  DJANGO_SECRET_KEY=  (REQUIRED — generate with command below)
+    python3 -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+
+  ALLOWED_HOSTS=yourdomain.com,www.yourdomain.com
+  DB_NAME=szg_sarbach
+  DB_USER=sarbach_user
+  DB_PASSWORD=your_strong_password_from_step_2
+  DB_HOST=localhost
+  DB_PORT=3306
+  SECURE_SSL_REDIRECT=False   (set True after SSL is working)
+
+4c. Copy the Gunicorn config:
 
   cp deploy_package/gunicorn.conf.py .
 
 
 ============================================================
-  STEP 5: SET UP THE DATABASE AND STATIC FILES
+  STEP 5: DATABASE SETUP AND STATIC FILES
 ============================================================
 
-Make sure your virtual environment is active, then run:
+Make sure your virtual environment is active:
 
-  source venv/bin/activate
+  source /var/www/szg_sarbach/venv/bin/activate
 
 5a. Run database migrations:
 
-  DJANGO_SETTINGS_MODULE=szg_sarbach.settings_production python manage.py migrate
+  DJANGO_SETTINGS_MODULE=szg_sarbach.settings_production \
+    python manage.py migrate
 
-5b. Load all pre-existing data (departments, treatments,
-    doctors, banners, settings, admin user, etc.):
+5b. Load all pre-populated content:
 
-  DJANGO_SETTINGS_MODULE=szg_sarbach.settings_production python manage.py loaddata fixtures/initial_data.json
+  DJANGO_SETTINGS_MODULE=szg_sarbach.settings_production \
+    python manage.py loaddata fixtures/initial_data.json
 
-  This loads all your content into the MySQL database
-  including departments, treatments, doctors, banners,
-  site settings, and the admin user account.
+  This loads: 7 departments, 18+ treatments, 2 doctors, 6 banners,
+  site settings, and staff user accounts (admin, receptionist, doctors).
 
-  SECURITY WARNING: The admin account uses a default
-  password. You MUST change it immediately after first
-  login! Go to /admin/ and update the password, or run:
+  *** SECURITY: Default passwords are set for demo. Change them
+      immediately via /panel/users/ after first login! ***
 
-  DJANGO_SETTINGS_MODULE=szg_sarbach.settings_production python manage.py changepassword admin
+  Default staff accounts loaded from fixture:
+    admin / admin123          (Super Admin → /welcome/admin/)
+    dr.meier / doctor123      (Doctor      → /doctor/)
+    dr.govinda / doctor123    (Doctor      → /doctor/)
+    receptionist / frontdesk123 (Front Desk → /welcome/admin/)
 
 5c. Collect static files:
 
-  DJANGO_SETTINGS_MODULE=szg_sarbach.settings_production python manage.py collectstatic --noinput
+  DJANGO_SETTINGS_MODULE=szg_sarbach.settings_production \
+    python manage.py collectstatic --noinput
 
-5d. (Optional) Create additional superuser accounts:
+5d. Quick smoke test:
 
-  DJANGO_SETTINGS_MODULE=szg_sarbach.settings_production python manage.py createsuperuser
+  DJANGO_SETTINGS_MODULE=szg_sarbach.settings_production \
+    python manage.py runserver 0.0.0.0:8000
 
-5e. Quick test - make sure it starts without errors:
-
-  DJANGO_SETTINGS_MODULE=szg_sarbach.settings_production python manage.py runserver 0.0.0.0:8000
-
-  Visit http://your-server-ip:8000 to verify.
+  Open http://your-server-ip:8000 — homepage should appear in German.
   Press Ctrl+C to stop.
 
 
@@ -179,7 +200,7 @@ Make sure your virtual environment is active, then run:
   sudo mkdir -p /var/log/gunicorn
   sudo chown www-data:www-data /var/log/gunicorn
 
-6b. Set proper file ownership:
+6b. Set correct file ownership:
 
   sudo chown -R www-data:www-data /var/www/szg_sarbach
 
@@ -193,56 +214,52 @@ Make sure your virtual environment is active, then run:
   sudo systemctl start szg_sarbach
   sudo systemctl enable szg_sarbach
 
-6e. Check it's running:
+6e. Verify it's running:
 
   sudo systemctl status szg_sarbach
 
-  You should see "active (running)". If not, check logs:
-  sudo journalctl -u szg_sarbach -f
+  Expected: "active (running)". If not, check logs:
+  sudo journalctl -u szg_sarbach -n 50
 
 
 ============================================================
   STEP 7: SET UP NGINX (Web Server)
 ============================================================
 
-7a. Copy the Nginx config (edit domain names first!):
+7a. Edit the Nginx config to replace "yourdomain.com" with
+    your actual domain:
 
-  Edit deploy_package/nginx_sarbach.conf and replace
-  "yourdomain.com" with your actual domain name.
+  nano deploy_package/nginx_sarbach.conf
+  (replace all occurrences of "yourdomain.com")
+
+7b. Install the config:
 
   sudo cp deploy_package/nginx_sarbach.conf /etc/nginx/sites-available/szg_sarbach
   sudo ln -s /etc/nginx/sites-available/szg_sarbach /etc/nginx/sites-enabled/
-
-7b. Remove default site if it exists:
-
   sudo rm -f /etc/nginx/sites-enabled/default
 
-7c. Test Nginx config:
+7c. Test and restart Nginx:
 
   sudo nginx -t
-
-7d. Restart Nginx:
-
   sudo systemctl restart nginx
 
 
 ============================================================
-  STEP 8: SET UP SSL (HTTPS) - OPTIONAL BUT RECOMMENDED
+  STEP 8: SSL WITH LET'S ENCRYPT (HTTPS)
 ============================================================
 
-IMPORTANT: Before getting SSL, you must first start with
-HTTP only. Comment out the entire "listen 443" server block
-in the Nginx config and remove the redirect. Then:
+SSL is strongly recommended. Before requesting a certificate,
+temporarily use HTTP only:
 
-8a. Temporarily use HTTP-only Nginx config:
-
-  Edit /etc/nginx/sites-available/szg_sarbach
-  Comment out the "listen 443 ssl" server block.
-  Change the port 80 block to:
+8a. Edit /etc/nginx/sites-available/szg_sarbach — comment out
+    the entire "listen 443 ssl" server block, and change the
+    port 80 block to proxy directly:
 
     server {
         listen 80;
         server_name yourdomain.com www.yourdomain.com;
+        location /static/ { alias /var/www/szg_sarbach/staticfiles/; }
+        location /media/  { alias /var/www/szg_sarbach/media/; }
         location / {
             proxy_pass http://127.0.0.1:8000;
             proxy_set_header Host $host;
@@ -250,103 +267,123 @@ in the Nginx config and remove the redirect. Then:
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Proto $scheme;
         }
-        location /static/ { alias /var/www/szg_sarbach/staticfiles/; }
-        location /media/ { alias /var/www/szg_sarbach/media/; }
     }
 
-  Also set SECURE_SSL_REDIRECT=False in your .env file.
-  Restart Nginx:  sudo systemctl restart nginx
+    Also set SECURE_SSL_REDIRECT=False in your .env and restart:
+    sudo systemctl restart szg_sarbach && sudo systemctl restart nginx
 
-  Verify site works at http://yourdomain.com
+    Verify: http://yourdomain.com — should show the homepage.
 
 8b. Install Certbot:
 
-  sudo apt install certbot python3-certbot-nginx
-  sudo mkdir -p /var/www/certbot
+  sudo apt install -y certbot python3-certbot-nginx
 
-8c. Get SSL certificate:
+8c. Get the certificate:
 
   sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com
 
-8d. Restore the full Nginx config with HTTPS:
+8d. Restore the full HTTPS Nginx config:
 
   Replace /etc/nginx/sites-available/szg_sarbach with the
-  original nginx_sarbach.conf (with your domain names).
+  original nginx_sarbach.conf (with your domain filled in).
   Set SECURE_SSL_REDIRECT=True in your .env file.
-  sudo systemctl restart nginx
   sudo systemctl restart szg_sarbach
+  sudo systemctl restart nginx
 
-8e. Certbot auto-renews. To test renewal:
+8e. Test auto-renewal:
 
   sudo certbot renew --dry-run
 
-NOTE: If you want to skip SSL entirely, keep the HTTP-only
-config from step 8a and set SECURE_SSL_REDIRECT=False
+NOTE: To run without SSL (e.g. behind a load balancer that
+handles TLS), keep the HTTP-only config and set
+SECURE_SSL_REDIRECT=False permanently.
 
 
 ============================================================
-  STEP 9: VERIFY EVERYTHING WORKS
+  STEP 9: VERIFY
 ============================================================
 
-  1. Visit https://yourdomain.com - you should see the homepage
-  2. Visit https://yourdomain.com/admin/ - Django admin login
-  3. Visit https://yourdomain.com/panel/ - Custom admin panel
-  4. Check uploaded images appear correctly
+  1. https://yourdomain.com            — German homepage
+  2. https://yourdomain.com/panel/     — Custom admin panel
+  3. https://yourdomain.com/welcome/admin/ — Staff login page
+  4. https://yourdomain.com/doctor/    — Doctor login page
+  5. https://yourdomain.com/contact/   — Contact/booking enquiry page
+  6. https://yourdomain.com/sitemap.xml — SEO sitemap
 
-
-============================================================
-  TROUBLESHOOTING
-============================================================
-
-Problem: 502 Bad Gateway
-  -> Check if Gunicorn is running:
-     sudo systemctl status szg_sarbach
-  -> Check Gunicorn logs:
-     sudo tail -f /var/log/gunicorn/error.log
-
-Problem: Static files not loading (CSS/JS missing)
-  -> Re-run: python manage.py collectstatic --noinput
-  -> Check Nginx static path in config matches actual path
-
-Problem: Media files (images) not showing
-  -> Check permissions: sudo chown -R www-data:www-data /var/www/szg_sarbach/media
-  -> Check Nginx media path in config
-
-Problem: Database connection error
-  -> Verify MySQL is running: sudo systemctl status mysql
-  -> Verify .env credentials match what you set in Step 2
-  -> Test manually: mysql -u sarbach_user -p szg_sarbach
-
-Problem: "DisallowedHost" error
-  -> Add your domain to ALLOWED_HOSTS in .env
-  -> Restart: sudo systemctl restart szg_sarbach
-
-
-============================================================
-  USEFUL COMMANDS
-============================================================
-
-  Restart app:       sudo systemctl restart szg_sarbach
-  Stop app:          sudo systemctl stop szg_sarbach
-  View app logs:     sudo journalctl -u szg_sarbach -f
-  Gunicorn logs:     sudo tail -f /var/log/gunicorn/error.log
-  Nginx logs:        sudo tail -f /var/log/nginx/error.log
-  Run migrations:    source venv/bin/activate && python manage.py migrate
-  Restart Nginx:     sudo systemctl restart nginx
+  IMMEDIATELY after first login:
+  • Go to /panel/users/ and change all default passwords.
+  • Review site settings at /panel/settings/
 
 
 ============================================================
   UPDATING THE APPLICATION
 ============================================================
 
-When you make changes and want to update the deployed version:
+When new code is pushed to GitHub and you want to update:
 
-  1. Upload the new files to /var/www/szg_sarbach/
-  2. Activate venv:  source /var/www/szg_sarbach/venv/bin/activate
-  3. Install deps:   pip install -r deploy_package/requirements.txt
-  4. Run migrations: DJANGO_SETTINGS_MODULE=szg_sarbach.settings_production python manage.py migrate
-  5. Collect static: DJANGO_SETTINGS_MODULE=szg_sarbach.settings_production python manage.py collectstatic --noinput
-  6. Fix permissions: sudo chown -R www-data:www-data /var/www/szg_sarbach
-  7. Restart app:    sudo systemctl restart szg_sarbach
+  cd /var/www/szg_sarbach
+  source venv/bin/activate
+  git pull origin main
+  pip install -r deploy_package/requirements.txt
+  DJANGO_SETTINGS_MODULE=szg_sarbach.settings_production \
+    python manage.py migrate
+  DJANGO_SETTINGS_MODULE=szg_sarbach.settings_production \
+    python manage.py collectstatic --noinput
+  sudo chown -R www-data:www-data /var/www/szg_sarbach
+  sudo systemctl restart szg_sarbach
 
+
+============================================================
+  TROUBLESHOOTING
+============================================================
+
+502 Bad Gateway
+  → Gunicorn not running: sudo systemctl status szg_sarbach
+  → Logs: sudo journalctl -u szg_sarbach -n 100
+  → Gunicorn log: sudo tail -f /var/log/gunicorn/error.log
+
+Static files not loading (CSS/JS broken)
+  → Re-run collectstatic (see Step 5c)
+  → Check Nginx static alias path matches STATIC_ROOT
+
+Images not displaying
+  → Check: sudo chown -R www-data:www-data /var/www/szg_sarbach/media
+  → Check Nginx media alias path
+
+Database connection error
+  → MySQL running: sudo systemctl status mysql
+  → Verify .env credentials match Step 2
+  → Test: mysql -u sarbach_user -p szg_sarbach
+
+DisallowedHost error
+  → Add your domain to ALLOWED_HOSTS in .env
+  → Restart: sudo systemctl restart szg_sarbach
+
+ImportError / ModuleNotFoundError
+  → Activate venv: source /var/www/szg_sarbach/venv/bin/activate
+  → Reinstall: pip install -r deploy_package/requirements.txt
+
+
+============================================================
+  USEFUL COMMANDS
+============================================================
+
+  Restart app:        sudo systemctl restart szg_sarbach
+  Stop app:           sudo systemctl stop szg_sarbach
+  App logs (live):    sudo journalctl -u szg_sarbach -f
+  Gunicorn errors:    sudo tail -f /var/log/gunicorn/error.log
+  Nginx errors:       sudo tail -f /var/log/nginx/error.log
+  Run migrations:     source venv/bin/activate && \
+                        DJANGO_SETTINGS_MODULE=szg_sarbach.settings_production \
+                        python manage.py migrate
+  Django shell:       source venv/bin/activate && \
+                        DJANGO_SETTINGS_MODULE=szg_sarbach.settings_production \
+                        python manage.py shell
+  Change password:    source venv/bin/activate && \
+                        DJANGO_SETTINGS_MODULE=szg_sarbach.settings_production \
+                        python manage.py changepassword <username>
+
+============================================================
+  GitHub Repository
+  https://github.com/cochero/szg-sarbach
 ============================================================

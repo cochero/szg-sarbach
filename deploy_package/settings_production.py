@@ -83,7 +83,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-LANGUAGE_CODE = 'en'
+LANGUAGE_CODE = 'de'
 
 TIME_ZONE = 'Europe/Zurich'
 
@@ -112,7 +112,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_URL = '/register/'
+LOGIN_URL = '/contact/'
 LOGIN_REDIRECT_URL = '/user/'
 LOGOUT_REDIRECT_URL = '/'
 
