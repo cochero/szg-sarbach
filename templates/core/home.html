@@ -64,7 +64,7 @@
                 <h2 class="fw-bold mb-2">{{ banner.title }}</h2>
                 <p class="mb-3">{{ banner.description }}</p>
                 {% if banner.link %}
-                <a href="{{ banner.link }}" class="btn btn-primary btn-lg">Explore</a>
+                <a href="{{ banner.link }}" class="btn btn-primary btn-lg">Entdecken</a>
                 {% endif %}
             </div>
         </div>
@@ -129,8 +129,8 @@
 
 <section class="py-5" data-aos="fade-up">
     <div class="container">
-        <h2 class="section-title text-center">Common Symptoms We Treat</h2>
-        <p class="text-center text-muted mb-4">Find relief for these conditions with our holistic Ayurvedic treatments</p>
+        <h2 class="section-title text-center">Häufige Beschwerden, die wir behandeln</h2>
+        <p class="text-center text-muted mb-4">Finden Sie Linderung mit unseren ganzheitlichen Ayurveda-Behandlungen</p>
         <div class="row g-3">
             {% for symptom in symptoms %}
             <div class="col-lg-2 col-md-3 col-sm-4 col-6" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0 }}0">
@@ -148,8 +148,8 @@
 
 <section class="py-5 bg-light" data-aos="fade-up">
     <div class="container">
-        <h2 class="section-title text-center">Clinic & Specialities</h2>
-        <p class="text-center text-muted mb-4">Ayurveda Treatments & Massages for Complete Well-being</p>
+        <h2 class="section-title text-center">Klinik & Fachbereiche</h2>
+        <p class="text-center text-muted mb-4">Ayurveda-Behandlungen & Massagen für Ihr vollständiges Wohlbefinden</p>
         <div class="row g-4">
             {% for treatment in treatments %}
             <div class="col-lg-3 col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}0">
@@ -167,7 +167,7 @@
                         <p class="card-text small text-muted">{{ treatment.description|truncatewords:15 }}</p>
                     </div>
                     <div class="card-footer bg-white border-0 pb-3">
-                        <a href="{% url 'treatment_detail' treatment.slug %}" class="btn btn-outline-primary btn-sm w-100">View Details</a>
+                        <a href="{% url 'treatment_detail' treatment.slug %}" class="btn btn-outline-primary btn-sm w-100">Details ansehen</a>
                     </div>
                 </div>
             </div>
@@ -187,19 +187,19 @@
                 <div class="promo-banner">
                     <img src="{% static 'images/promo/trythis.png' %}" alt="Try Ayurveda" loading="lazy">
                     <div class="overlay">
-                        <h3 class="fw-bold mb-2">Discover Ayurveda</h3>
-                        <p>The ancient science of life for modern wellness</p>
-                        <a href="{% url 'appointment' %}" class="btn btn-light">Book a Consultation</a>
+                        <h3 class="fw-bold mb-2">Ayurveda entdecken</h3>
+                        <p>Die uralte Wissenschaft vom Leben für modernes Wohlbefinden</p>
+                        <a href="{% url 'appointment' %}" class="btn btn-light">Beratung buchen</a>
                     </div>
                 </div>
             </div>
             <div class="col-md-6" data-aos="fade-left">
                 <div class="promo-banner">
-                    <img src="{% static 'img/slider/feature-img.jpg' %}" alt="Gift Vouchers" loading="lazy">
+                    <img src="{% static 'img/slider/feature-img.jpg' %}" alt="Geschenkgutscheine" loading="lazy">
                     <div class="overlay" style="background: linear-gradient(135deg, rgba(26,26,46,0.85), rgba(26,26,46,0.75));">
-                        <h3 class="fw-bold mb-2">Gift Voucher</h3>
-                        <p>A Gift For Your Loved Ones - Buy a gift voucher today</p>
-                        <a href="{% url 'contact' %}" class="btn btn-primary">Contact Us</a>
+                        <h3 class="fw-bold mb-2">Geschenkgutschein</h3>
+                        <p>Ein Geschenk für Ihre Liebsten – Jetzt Gutschein kaufen</p>
+                        <a href="{% url 'contact' %}" class="btn btn-primary">Kontaktieren Sie uns</a>
                     </div>
                 </div>
             </div>
@@ -209,8 +209,8 @@
 
 <section class="py-5 bg-light" data-aos="fade-up">
     <div class="container">
-        <h2 class="section-title text-center">Browse by Department</h2>
-        <p class="text-center text-muted mb-4">Find treatments by speciality</p>
+        <h2 class="section-title text-center">Nach Fachbereich durchsuchen</h2>
+        <p class="text-center text-muted mb-4">Finden Sie Behandlungen nach Ihrem Fachgebiet</p>
         <div class="row g-4 justify-content-center">
             {% for dept in departments %}
             <div class="col-lg-3 col-md-4 col-sm-6" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0 }}0">
@@ -220,7 +220,7 @@
                             <i class="fas fa-{% cycle 'spa' 'leaf' 'bone' 'lungs' 'yin-yang' 'bell' 'hand-holding-medical' %}"></i>
                         </div>
                         <h6 class="fw-bold text-dark mb-1">{{ dept.name }}</h6>
-                        <small class="text-muted">{{ dept.treatment_set.count }} treatment{{ dept.treatment_set.count|pluralize }}</small>
+                        <small class="text-muted">{{ dept.treatment_set.count }} Behandlung{{ dept.treatment_set.count|pluralize:"en" }}</small>
                     </div>
                 </a>
             </div>
@@ -231,8 +231,8 @@
 
 <section class="py-5" data-aos="fade-up">
     <div class="container">
-        <h2 class="section-title text-center">Add-on Services</h2>
-        <p class="text-center text-muted mb-4">Enhance your treatment with these additional services</p>
+        <h2 class="section-title text-center">Zusatzleistungen</h2>
+        <p class="text-center text-muted mb-4">Ergänzen Sie Ihre Behandlung mit diesen zusätzlichen Angeboten</p>
         <div class="row g-4 justify-content-center">
             {% for addon in addons %}
             <div class="col-lg-3 col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}0">
@@ -259,33 +259,33 @@
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-6" data-aos="fade-right">
-                <h2 class="section-title">Why Choose SZG Sarbach?</h2>
+                <h2 class="section-title">Warum SZG Sarbach?</h2>
                 <div class="why-choose-item">
                     <div class="icon-circle"><i class="fas fa-certificate"></i></div>
                     <div>
-                        <h6 class="fw-bold mb-1">EMR & ASCA Recognized</h6>
-                        <p class="text-muted small mb-0">Our treatments are recognized by all major Swiss complementary insurance providers.</p>
+                        <h6 class="fw-bold mb-1">EMR & ASCA anerkannt</h6>
+                        <p class="text-muted small mb-0">Unsere Behandlungen werden von allen grossen Schweizer Zusatzversicherungen anerkannt.</p>
                     </div>
                 </div>
                 <div class="why-choose-item">
                     <div class="icon-circle"><i class="fas fa-user-md"></i></div>
                     <div>
-                        <h6 class="fw-bold mb-1">Qualified Practitioners</h6>
-                        <p class="text-muted small mb-0">Our team has years of experience in traditional Ayurvedic medicine and modern therapies.</p>
+                        <h6 class="fw-bold mb-1">Qualifizierte Therapeuten</h6>
+                        <p class="text-muted small mb-0">Unser Team verfügt über jahrelange Erfahrung in der traditionellen Ayurvedamedizin und modernen Therapien.</p>
                     </div>
                 </div>
                 <div class="why-choose-item">
                     <div class="icon-circle"><i class="fas fa-mountain"></i></div>
                     <div>
-                        <h6 class="fw-bold mb-1">Beautiful Leukerbad Location</h6>
-                        <p class="text-muted small mb-0">Heal in the heart of the Swiss Alps, surrounded by nature and thermal springs.</p>
+                        <h6 class="fw-bold mb-1">Wunderschöne Lage in Leukerbad</h6>
+                        <p class="text-muted small mb-0">Heilen Sie im Herzen der Schweizer Alpen, umgeben von Natur und Thermalquellen.</p>
                     </div>
                 </div>
                 <div class="why-choose-item">
                     <div class="icon-circle"><i class="fas fa-heartbeat"></i></div>
                     <div>
-                        <h6 class="fw-bold mb-1">Holistic Approach</h6>
-                        <p class="text-muted small mb-0">We treat the whole person - body, mind and soul - for lasting wellness results.</p>
+                        <h6 class="fw-bold mb-1">Ganzheitlicher Ansatz</h6>
+                        <p class="text-muted small mb-0">Wir behandeln den ganzen Menschen – Körper, Geist und Seele – für dauerhaftes Wohlbefinden.</p>
                     </div>
                 </div>
             </div>
@@ -298,8 +298,8 @@
 
 <section class="py-5" data-aos="fade-up">
     <div class="container">
-        <h2 class="section-title text-center">Our Doctors</h2>
-        <p class="text-center text-muted mb-4">Experienced and qualified health professionals</p>
+        <h2 class="section-title text-center">Unsere Ärzte</h2>
+        <p class="text-center text-muted mb-4">Erfahrene und qualifizierte Gesundheitsfachleute</p>
         <div class="row g-4 justify-content-center">
             {% for doctor in doctors %}
             <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
@@ -331,7 +331,7 @@
 {% if blogs %}
 <section class="py-5 bg-light" data-aos="fade-up">
     <div class="container">
-        <h2 class="section-title text-center">Latest News & Blog</h2>
+        <h2 class="section-title text-center">Aktuelle Neuigkeiten & Blog</h2>
         <div class="row g-4">
             {% for blog in blogs %}
             <div class="col-md-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
@@ -349,7 +349,7 @@
                         <p class="card-text small text-muted">{{ blog.description|truncatewords:20|safe }}</p>
                     </div>
                     <div class="card-footer bg-white border-0 pb-3">
-                        <a href="{% url 'blog_detail' blog.slug %}" class="btn btn-outline-primary btn-sm">Read More</a>
+                        <a href="{% url 'blog_detail' blog.slug %}" class="btn btn-outline-primary btn-sm">Weiterlesen</a>
                     </div>
                 </div>
             </div>
@@ -363,13 +363,13 @@
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-8">
-                <h2 class="fw-bold mb-3">Book Your Appointment Today</h2>
-                <p class="mb-0 opacity-75">Experience holistic healing at our health centre in Leukerbad. Our experienced practitioners combine traditional Ayurvedic wisdom with modern medical knowledge for your complete well-being.</p>
+                <h2 class="fw-bold mb-3">Jetzt Ihren Termin buchen</h2>
+                <p class="mb-0 opacity-75">Erleben Sie ganzheitliche Heilung in unserem Gesundheitszentrum in Leukerbad. Unsere erfahrenen Therapeuten verbinden traditionelles Ayurveda-Wissen mit modernem medizinischem Wissen für Ihr vollständiges Wohlbefinden.</p>
             </div>
             <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
-                <a href="{% url 'appointment' %}" class="btn btn-light btn-lg px-4 me-2"><i class="fas fa-calendar-check me-2"></i>Book Now</a>
-                <a href="https://wa.me/41792907744?text=Hello%2C%20I%20would%20like%20to%20book%20an%20appointment%20at%20SZG%20Sarbach." target="_blank" class="btn btn-lg px-4 me-2" style="background-color: #25D366; color: #fff; border: none;"><i class="fab fa-whatsapp me-2"></i>WhatsApp</a>
-                <a href="{% url 'contact' %}" class="btn btn-outline-light btn-lg px-4"><i class="fas fa-phone me-2"></i>Contact</a>
+                <a href="{% url 'appointment' %}" class="btn btn-light btn-lg px-4 me-2"><i class="fas fa-calendar-check me-2"></i>Jetzt buchen</a>
+                <a href="https://wa.me/41792907744?text=Guten%20Tag%2C%20ich%20m%C3%B6chte%20einen%20Termin%20bei%20SZG%20Sarbach%20buchen." target="_blank" class="btn btn-lg px-4 me-2" style="background-color: #25D366; color: #fff; border: none;"><i class="fab fa-whatsapp me-2"></i>WhatsApp</a>
+                <a href="{% url 'contact' %}" class="btn btn-outline-light btn-lg px-4"><i class="fas fa-phone me-2"></i>Kontakt</a>
             </div>
         </div>
     </div>

@@ -117,7 +117,7 @@
 <body>
 <div class="insurance-bar">
     <div class="container">
-        <i class="fas fa-shield-alt text-primary me-1"></i> EMR, ASCA, EGK & Krankenkassen anerkannt | Complementary Insurance recognized
+        <i class="fas fa-shield-alt text-primary me-1"></i> EMR, ASCA, EGK & Krankenkassen anerkannt | Komplementärversicherung anerkannt
     </div>
 </div>
 
@@ -140,9 +140,9 @@
             <div id="google_translate_element"></div>
             {% if user.is_authenticated %}
                 <a href="{% url 'user_dashboard' %}"><i class="fas fa-tachometer-alt me-1"></i> Dashboard</a>
-                <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt me-1"></i> Logout</a>
+                <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt me-1"></i> Abmelden</a>
             {% else %}
-                <a href="{% url 'register' %}"><i class="fas fa-sign-in-alt me-1"></i> Login / Register</a>
+                <a href="{% url 'register' %}"><i class="fas fa-sign-in-alt me-1"></i> Anmelden / Registrieren</a>
             {% endif %}
         </div>
     </div>
@@ -158,22 +158,22 @@
         </button>
         <div class="collapse navbar-collapse" id="mainNav">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Startseite</a></li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Health Center</a>
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Behandlungen</a>
                     <ul class="dropdown-menu">
                         {% for dept in nav_departments %}
                         <li><a class="dropdown-item" href="{% url 'department_list' dept.slug %}">{{ dept.name }}</a></li>
                         {% endfor %}
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{% url 'doctor_profile' %}"><i class="fas fa-user-md me-2"></i>Our Doctors</a></li>
+                        <li><a class="dropdown-item" href="{% url 'doctor_profile' %}"><i class="fas fa-user-md me-2"></i>Unsere Ärzte</a></li>
                     </ul>
                 </li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'accommodations' %}">Accommodations</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'accommodations' %}">Unterkunft</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'blogs' %}">Blog</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'events' %}">Events</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">Contact</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'events' %}">Veranstaltungen</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">Über uns</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">Kontakt</a></li>
                 {% if user.is_authenticated %}
                 <li class="nav-item"><a class="nav-link" href="{% url 'cart' %}"><i class="fas fa-shopping-cart"></i></a></li>
                 {% endif %}
@@ -210,7 +210,7 @@
                 </ul>
             </div>
             <div class="col-lg-3 col-md-6">
-                <h5>Contact</h5>
+                <h5>Kontakt</h5>
                 <ul class="list-unstyled small">
                     <li class="mb-2"><i class="fas fa-map-marker-alt text-primary me-2"></i>{{ site_settings.site_address|default:"Dorfstrasse 23, CH-3954 Leukerbad" }}</li>
                     <li class="mb-2"><i class="fas fa-phone text-primary me-2"></i>{{ site_settings.site_phone|default:"+41 79 290 77 44" }}</li>
@@ -225,36 +225,36 @@
                 </div>
             </div>
             <div class="col-lg-3 col-md-6">
-                <h5>Treatments</h5>
+                <h5>Behandlungen</h5>
                 <ul class="list-unstyled small">
                     {% for t in featured_treatments %}
                     <li class="mb-1"><a href="{% url 'treatment_detail' t.slug %}"><i class="fas fa-chevron-right me-1 small"></i>{{ t.name }}</a></li>
                     {% empty %}
-                    <li><a href="{% url 'home' %}">View all treatments</a></li>
+                    <li><a href="{% url 'home' %}">Alle Behandlungen ansehen</a></li>
                     {% endfor %}
                 </ul>
             </div>
             <div class="col-lg-3 col-md-6">
-                <h5>Quick Links</h5>
+                <h5>Schnelllinks</h5>
                 <ul class="list-unstyled small">
-                    <li class="mb-1"><a href="{% url 'about' %}"><i class="fas fa-chevron-right me-1 small"></i>About Us</a></li>
-                    <li class="mb-1"><a href="{% url 'doctor_profile' %}"><i class="fas fa-chevron-right me-1 small"></i>Our Doctors</a></li>
-                    <li class="mb-1"><a href="{% url 'accommodations' %}"><i class="fas fa-chevron-right me-1 small"></i>Accommodations</a></li>
-                    <li class="mb-1"><a href="{% url 'appointment' %}"><i class="fas fa-chevron-right me-1 small"></i>Book Appointment</a></li>
+                    <li class="mb-1"><a href="{% url 'about' %}"><i class="fas fa-chevron-right me-1 small"></i>Über uns</a></li>
+                    <li class="mb-1"><a href="{% url 'doctor_profile' %}"><i class="fas fa-chevron-right me-1 small"></i>Unsere Ärzte</a></li>
+                    <li class="mb-1"><a href="{% url 'accommodations' %}"><i class="fas fa-chevron-right me-1 small"></i>Unterkunft</a></li>
+                    <li class="mb-1"><a href="{% url 'appointment' %}"><i class="fas fa-chevron-right me-1 small"></i>Termin buchen</a></li>
                     <li class="mb-1"><a href="{% url 'blogs' %}"><i class="fas fa-chevron-right me-1 small"></i>Blog</a></li>
-                    <li class="mb-1"><a href="{% url 'privacy' %}"><i class="fas fa-chevron-right me-1 small"></i>Privacy Policy</a></li>
-                    <li class="mb-1"><a href="{% url 'terms' %}"><i class="fas fa-chevron-right me-1 small"></i>Terms & Conditions</a></li>
+                    <li class="mb-1"><a href="{% url 'privacy' %}"><i class="fas fa-chevron-right me-1 small"></i>Datenschutz</a></li>
+                    <li class="mb-1"><a href="{% url 'terms' %}"><i class="fas fa-chevron-right me-1 small"></i>AGB</a></li>
                 </ul>
             </div>
         </div>
         <hr class="my-4" style="border-color: #333;">
         <div class="row align-items-center">
             <div class="col-md-6 text-center text-md-start">
-                <p class="small mb-0">&copy; {% now "Y" %} SZG Sarbach Gesundheitszentrum. All rights reserved.</p>
+                <p class="small mb-0">&copy; {% now "Y" %} SZG Sarbach Gesundheitszentrum. Alle Rechte vorbehalten.</p>
             </div>
             <div class="col-md-6 text-center text-md-end">
-                <a href="{% url 'doctor_login_page' %}" class="small me-3">Doctor Login</a>
-                <a href="{% url 'admin_login_page' %}" class="small">Staff Login</a>
+                <a href="{% url 'doctor_login_page' %}" class="small me-3">Arzt-Login</a>
+                <a href="{% url 'admin_login_page' %}" class="small">Personal-Login</a>
             </div>
         </div>
     </div>
