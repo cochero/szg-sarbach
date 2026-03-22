@@ -70,55 +70,15 @@ def realestate(request):
 
 
 def register_page(request):
-    return render(request, 'core/register.html')
+    return redirect('contact')
 
 
 def patient_login(request):
-    if request.method == 'POST':
-        email = request.POST.get('email', '')
-        password = request.POST.get('password', '')
-        try:
-            user_obj = User.objects.get(email=email)
-            user = authenticate(request, username=user_obj.username, password=password)
-            if user and hasattr(user, 'profile') and user.profile.role == 'patient':
-                login(request, user)
-                return JsonResponse({'success': True})
-            return JsonResponse({'success': False, 'message': 'Incorrect login details'})
-        except User.DoesNotExist:
-            return JsonResponse({'success': False, 'message': 'Incorrect login details'})
-    return JsonResponse({'success': False, 'message': 'Invalid request'})
+    return redirect('contact')
 
 
 def patient_register(request):
-    if request.method == 'POST':
-        fname = request.POST.get('fname', '')
-        givenname = request.POST.get('givenname', '')
-        email = request.POST.get('email', '')
-        password = request.POST.get('password', '')
-        mobile = request.POST.get('mobile', '')
-        gender = request.POST.get('gender', 'Male')
-        age = request.POST.get('age', 0)
-
-        if User.objects.filter(email=email).exists():
-            return JsonResponse({'success': False, 'message': 'Email already registered'})
-
-        username = email
-        user = User.objects.create_user(
-            username=username,
-            email=email,
-            password=password,
-            first_name=fname,
-            last_name=givenname,
-        )
-        UserProfile.objects.create(
-            user=user,
-            role='patient',
-            phone=mobile,
-            gender=gender,
-            age=int(age) if age else 0,
-        )
-        return JsonResponse({'success': True})
-    return JsonResponse({'success': False, 'message': 'Invalid request'})
+    return redirect('contact')
 
 
 def doctor_login_page(request):

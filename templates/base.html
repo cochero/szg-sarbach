@@ -138,11 +138,8 @@
                 <a class="lang-btn" data-lang="ru" href="#" onclick="switchLang('ru');return false;" title="Русский">🇷🇺 RU</a>
             </div>
             <div id="google_translate_element"></div>
-            {% if user.is_authenticated %}
-                <a href="{% url 'user_dashboard' %}"><i class="fas fa-tachometer-alt me-1"></i> Dashboard</a>
+            {% if user.is_authenticated and user.profile.role != 'patient' %}
                 <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt me-1"></i> Abmelden</a>
-            {% else %}
-                <a href="{% url 'register' %}"><i class="fas fa-sign-in-alt me-1"></i> Anmelden / Registrieren</a>
             {% endif %}
         </div>
     </div>
@@ -174,9 +171,6 @@
                 <li class="nav-item"><a class="nav-link" href="{% url 'events' %}">Veranstaltungen</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">Über uns</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">Kontakt</a></li>
-                {% if user.is_authenticated %}
-                <li class="nav-item"><a class="nav-link" href="{% url 'cart' %}"><i class="fas fa-shopping-cart"></i></a></li>
-                {% endif %}
             </ul>
         </div>
     </div>

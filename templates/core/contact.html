@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Contact Us - SZG Sarbach Gesundheitszentrum{% endblock %}
-{% block meta_description %}Contact SZG Sarbach Gesundheitszentrum in Leukerbad. Phone, email, address and enquiry form.{% endblock %}
+{% block title %}Kontakt - SZG Sarbach Gesundheitszentrum{% endblock %}
+{% block meta_description %}Kontaktieren Sie das SZG Sarbach Gesundheitszentrum in Leukerbad. Telefon, E-Mail, Adresse und Kontaktformular für Anfragen und Terminbuchungen.{% endblock %}
 
 {% block content %}
 <div class="breadcrumb-area">
     <div class="container">
-        <h1 class="fw-bold">Contact Us</h1>
+        <h1 class="fw-bold">Kontakt</h1>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
-                <li class="breadcrumb-item active">Contact</li>
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Startseite</a></li>
+                <li class="breadcrumb-item active">Kontakt</li>
             </ol>
         </nav>
     </div>
@@ -21,13 +21,13 @@
     <div class="container">
         <div class="row g-5">
             <div class="col-lg-4" data-aos="fade-right">
-                <h4 class="section-title">Get in Touch</h4>
+                <h4 class="section-title">Kontaktinformationen</h4>
                 <div class="card p-4 mb-3">
                     <div class="d-flex align-items-start">
                         <i class="fas fa-map-marker-alt fa-2x text-primary me-3 mt-1"></i>
                         <div>
-                            <h6 class="mb-1">Address</h6>
-                            <p class="text-muted small mb-0">{{ site_settings.site_address|default:"Dorfstrasse 23, CH-3954 Leukerbad, Switzerland" }}</p>
+                            <h6 class="mb-1">Adresse</h6>
+                            <p class="text-muted small mb-0">{{ site_settings.site_address|default:"Dorfstrasse 23, CH-3954 Leukerbad, Schweiz" }}</p>
                         </div>
                     </div>
                 </div>
@@ -35,7 +35,7 @@
                     <div class="d-flex align-items-start">
                         <i class="fas fa-phone fa-2x text-primary me-3 mt-1"></i>
                         <div>
-                            <h6 class="mb-1">Phone</h6>
+                            <h6 class="mb-1">Telefon</h6>
                             <p class="text-muted small mb-0">{{ site_settings.site_phone|default:"+41 79 290 77 44" }}</p>
                         </div>
                     </div>
@@ -44,7 +44,7 @@
                     <div class="d-flex align-items-start">
                         <i class="fas fa-envelope fa-2x text-primary me-3 mt-1"></i>
                         <div>
-                            <h6 class="mb-1">Email</h6>
+                            <h6 class="mb-1">E-Mail</h6>
                             <p class="text-muted small mb-0">{{ site_settings.site_email|default:"help@sarbach.swiss" }}</p>
                         </div>
                     </div>
@@ -54,9 +54,9 @@
                         <i class="fab fa-whatsapp fa-2x me-3 mt-1" style="color: #25D366;"></i>
                         <div>
                             <h6 class="mb-1">WhatsApp</h6>
-                            <p class="text-muted small mb-2">Chat with us directly</p>
-                            <a href="https://wa.me/41792907744?text=Hello%2C%20I%20would%20like%20to%20know%20more%20about%20your%20services." target="_blank" class="btn btn-sm text-white" style="background-color: #25D366;">
-                                <i class="fab fa-whatsapp me-1"></i> Start Chat
+                            <p class="text-muted small mb-2">Schreiben Sie uns direkt</p>
+                            <a href="https://wa.me/41792907744?text=Guten%20Tag%2C%20ich%20m%C3%B6chte%20mehr%20%C3%BCber%20Ihre%20Dienstleistungen%20erfahren." target="_blank" class="btn btn-sm text-white" style="background-color: #25D366;">
+                                <i class="fab fa-whatsapp me-1"></i> Chat starten
                             </a>
                         </div>
                     </div>
@@ -65,41 +65,42 @@
                     <div class="d-flex align-items-start">
                         <i class="fas fa-clock fa-2x text-primary me-3 mt-1"></i>
                         <div>
-                            <h6 class="mb-1">Working Hours</h6>
-                            <p class="text-muted small mb-0">Mon - Fri: 09:00 - 18:00<br>Sat: 09:00 - 14:00</p>
+                            <h6 class="mb-1">Öffnungszeiten</h6>
+                            <p class="text-muted small mb-0">Mo – Fr: 09:00 – 18:00 Uhr<br>Sa: 09:00 – 14:00 Uhr</p>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-lg-8" data-aos="fade-left">
-                <h4 class="section-title">Send us a Message</h4>
+                <h4 class="section-title">Nachricht senden</h4>
+                <p class="text-muted mb-4">Möchten Sie einen Termin buchen oder haben Sie eine Frage? Füllen Sie das Formular aus – wir melden uns umgehend bei Ihnen.</p>
                 <div class="card p-4">
                     <form id="contactForm">
                         {% csrf_token %}
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label class="form-label">Full Name *</label>
-                                <input type="text" class="form-control" name="name" required>
+                                <label class="form-label">Vollständiger Name *</label>
+                                <input type="text" class="form-control" name="name" required placeholder="Vor- und Nachname">
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Email *</label>
-                                <input type="email" class="form-control" name="email" required>
+                                <label class="form-label">E-Mail *</label>
+                                <input type="email" class="form-control" name="email" required placeholder="ihre@email.ch">
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Phone</label>
-                                <input type="text" class="form-control" name="phone">
+                                <label class="form-label">Telefon</label>
+                                <input type="text" class="form-control" name="phone" placeholder="+41 ...">
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Subject</label>
-                                <input type="text" class="form-control" name="subject">
+                                <label class="form-label">Betreff</label>
+                                <input type="text" class="form-control" name="subject" placeholder="z.B. Terminanfrage Ayurveda">
                             </div>
                             <div class="col-12">
-                                <label class="form-label">Message *</label>
-                                <textarea class="form-control" name="message" rows="5" required></textarea>
+                                <label class="form-label">Nachricht *</label>
+                                <textarea class="form-control" name="message" rows="5" required placeholder="Beschreiben Sie Ihr Anliegen oder wählen Sie einen Wunschtermin …"></textarea>
                             </div>
                             <div class="col-12">
                                 <button type="submit" class="btn btn-primary btn-lg" id="contactBtn">
-                                    <i class="fas fa-paper-plane me-2"></i>Send Message
+                                    <i class="fas fa-paper-plane me-2"></i>Nachricht senden
                                 </button>
                             </div>
                         </div>
@@ -121,7 +122,7 @@
 $('#contactForm').on('submit', function(e) {
     e.preventDefault();
     var btn = $('#contactBtn');
-    btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i>Sending...');
+    btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i>Wird gesendet…');
     $.ajax({
         url: "{% url 'contact_submit' %}",
         type: 'POST',
@@ -133,11 +134,11 @@ $('#contactForm').on('submit', function(e) {
             } else {
                 $('#contactMsg').html('<div class="alert alert-danger">' + res.message + '</div>').show();
             }
-            btn.prop('disabled', false).html('<i class="fas fa-paper-plane me-2"></i>Send Message');
+            btn.prop('disabled', false).html('<i class="fas fa-paper-plane me-2"></i>Nachricht senden');
         },
         error: function() {
-            $('#contactMsg').html('<div class="alert alert-danger">An error occurred. Please try again.</div>').show();
-            btn.prop('disabled', false).html('<i class="fas fa-paper-plane me-2"></i>Send Message');
+            $('#contactMsg').html('<div class="alert alert-danger">Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.</div>').show();
+            btn.prop('disabled', false).html('<i class="fas fa-paper-plane me-2"></i>Nachricht senden');
         }
     });
 });

@@ -8,16 +8,9 @@ from clinic.models import Department, Treatment, Doctor, City, Hotel
 from core.models import UserProfile
 
 
-@login_required
 def appointment_page(request):
-    departments = Department.objects.filter(dept_type='deps', is_active=True)
-    cities = City.objects.all()
-    doctors = Doctor.objects.filter(is_active=True)
-    return render(request, 'appointments/appointment.html', {
-        'departments': departments,
-        'cities': cities,
-        'doctors': doctors,
-    })
+    from django.shortcuts import redirect as redir
+    return redir('contact')
 
 
 @login_required
