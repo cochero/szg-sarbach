@@ -91,14 +91,22 @@
         .breadcrumb-area .breadcrumb-item.active { color: #fff; }
         .breadcrumb-item+.breadcrumb-item::before { color: rgba(255,255,255,0.6); }
         .goog-te-banner-frame { display: none !important; }
+        .goog-logo-link { display: none !important; }
         body { top: 0 !important; }
-        .goog-te-gadget .goog-te-combo { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.5); border-radius: 4px; padding: 3px 8px; font-size: 0.8rem; cursor: pointer; outline: none; }
-        .goog-te-gadget .goog-te-combo option { color: #333; background: #fff; }
-        .goog-te-gadget { font-size: 0 !important; color: transparent !important; }
-        .goog-te-gadget span { display: none; }
-        .lang-switcher { display: flex; align-items: center; gap: 6px; }
-        .lang-switcher .lang-label { color: #fff; font-size: 0.8rem; white-space: nowrap; }
-        .lang-switcher .fa-globe { color: #fff; }
+        .goog-te-gadget { display: none !important; }
+        /* Custom language switcher */
+        .lang-switcher { display: flex; align-items: center; gap: 4px; }
+        .lang-switcher .lang-label { color: rgba(255,255,255,0.8); font-size: 0.75rem; white-space: nowrap; margin-right: 2px; }
+        .lang-btn {
+            display: inline-flex; align-items: center; gap: 3px;
+            background: rgba(255,255,255,0.15); color: #fff;
+            border: 1px solid rgba(255,255,255,0.35); border-radius: 4px;
+            padding: 2px 7px; font-size: 0.75rem; font-weight: 600;
+            cursor: pointer; text-decoration: none; transition: all 0.2s;
+            letter-spacing: 0.03em;
+        }
+        .lang-btn:hover { background: rgba(255,255,255,0.3); color: #fff; border-color: rgba(255,255,255,0.7); }
+        .lang-btn.active { background: #fff; color: var(--primary); border-color: #fff; }
         .insurance-bar { background-color: var(--primary-light); font-size: 0.8rem; padding: 4px 0; text-align: center; color: #555; }
         .badge-status { font-size: 0.75rem; }
     </style>
@@ -119,9 +127,14 @@
         </div>
         <div class="d-flex align-items-center gap-3">
             <div class="lang-switcher">
-                <i class="fas fa-globe"></i>
-                <div id="google_translate_element"></div>
+                <span class="lang-label"><i class="fas fa-globe me-1"></i></span>
+                <a class="lang-btn" data-lang="de" href="#" onclick="switchLang('de');return false;" title="Deutsch">🇩🇪 DE</a>
+                <a class="lang-btn" data-lang="en" href="#" onclick="switchLang('en');return false;" title="English">🇬🇧 EN</a>
+                <a class="lang-btn" data-lang="fr" href="#" onclick="switchLang('fr');return false;" title="Français">🇫🇷 FR</a>
+                <a class="lang-btn" data-lang="it" href="#" onclick="switchLang('it');return false;" title="Italiano">🇮🇹 IT</a>
+                <a class="lang-btn" data-lang="ru" href="#" onclick="switchLang('ru');return false;" title="Русский">🇷🇺 RU</a>
             </div>
+            <div id="google_translate_element" style="display:none;"></div>
             {% if user.is_authenticated %}
                 <a href="{% url 'user_dashboard' %}"><i class="fas fa-tachometer-alt me-1"></i> Dashboard</a>
                 <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt me-1"></i> Logout</a>
@@ -273,6 +286,41 @@
 </script>
 
 <script type="text/javascript">
+/* ── Language switcher ──────────────────────────────────────── */
+var LANG_NAMES = { de: 'Deutsch', en: 'English', fr: 'Français', it: 'Italiano', ru: 'Русский' };
+
+function getLangCookie() {
+    var match = document.cookie.match(/googtrans=\/de\/([a-z]+)/);
+    return match ? match[1] : 'de';
+}
+
+function switchLang(lang) {
+    if (lang === 'de') {
+        /* Remove the cookie — shows original German content */
+        document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + location.hostname;
+    } else {
+        var val = '/de/' + lang;
+        document.cookie = 'googtrans=' + val + '; path=/;';
+        document.cookie = 'googtrans=' + val + '; path=/; domain=' + location.hostname;
+    }
+    location.reload();
+}
+
+function markActiveLang() {
+    var active = getLangCookie();
+    document.querySelectorAll('.lang-btn').forEach(function(btn) {
+        if (btn.getAttribute('data-lang') === active) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', markActiveLang);
+
+/* ── Google Translate init (hidden, drives the translation) ─── */
 function googleTranslateElementInit() {
     new google.translate.TranslateElement({
         pageLanguage: 'de',
