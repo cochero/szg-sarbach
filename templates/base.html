@@ -93,7 +93,10 @@
         .goog-te-banner-frame { display: none !important; }
         .goog-logo-link { display: none !important; }
         body { top: 0 !important; }
-        .goog-te-gadget { display: none !important; }
+        /* Hide Google's own widget UI but keep it functional */
+        #google_translate_element { position: absolute; left: -9999px; top: -9999px; width: 1px; height: 1px; overflow: hidden; opacity: 0; pointer-events: none; }
+        .goog-te-gadget { font-size: 0 !important; }
+        .goog-te-gadget span { display: none !important; }
         /* Custom language switcher */
         .lang-switcher { display: flex; align-items: center; gap: 4px; }
         .lang-switcher .lang-label { color: rgba(255,255,255,0.8); font-size: 0.75rem; white-space: nowrap; margin-right: 2px; }
@@ -134,7 +137,7 @@
                 <a class="lang-btn" data-lang="it" href="#" onclick="switchLang('it');return false;" title="Italiano">🇮🇹 IT</a>
                 <a class="lang-btn" data-lang="ru" href="#" onclick="switchLang('ru');return false;" title="Русский">🇷🇺 RU</a>
             </div>
-            <div id="google_translate_element" style="display:none;"></div>
+            <div id="google_translate_element"></div>
             {% if user.is_authenticated %}
                 <a href="{% url 'user_dashboard' %}"><i class="fas fa-tachometer-alt me-1"></i> Dashboard</a>
                 <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt me-1"></i> Logout</a>
@@ -286,41 +289,7 @@
 </script>
 
 <script type="text/javascript">
-/* ── Language switcher ──────────────────────────────────────── */
-var LANG_NAMES = { de: 'Deutsch', en: 'English', fr: 'Français', it: 'Italiano', ru: 'Русский' };
-
-function getLangCookie() {
-    var match = document.cookie.match(/googtrans=\/de\/([a-z]+)/);
-    return match ? match[1] : 'de';
-}
-
-function switchLang(lang) {
-    if (lang === 'de') {
-        /* Remove the cookie — shows original German content */
-        document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-        document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + location.hostname;
-    } else {
-        var val = '/de/' + lang;
-        document.cookie = 'googtrans=' + val + '; path=/;';
-        document.cookie = 'googtrans=' + val + '; path=/; domain=' + location.hostname;
-    }
-    location.reload();
-}
-
-function markActiveLang() {
-    var active = getLangCookie();
-    document.querySelectorAll('.lang-btn').forEach(function(btn) {
-        if (btn.getAttribute('data-lang') === active) {
-            btn.classList.add('active');
-        } else {
-            btn.classList.remove('active');
-        }
-    });
-}
-
-document.addEventListener('DOMContentLoaded', markActiveLang);
-
-/* ── Google Translate init (hidden, drives the translation) ─── */
+/* ── Google Translate init ──────────────────────────────────── */
 function googleTranslateElementInit() {
     new google.translate.TranslateElement({
         pageLanguage: 'de',
@@ -329,6 +298,54 @@ function googleTranslateElementInit() {
         autoDisplay: false
     }, 'google_translate_element');
 }
+
+/* ── Custom language switcher ───────────────────────────────── */
+function setGTranslateCookie(lang) {
+    var expires = new Date();
+    expires.setFullYear(expires.getFullYear() + 1);
+    var cookieVal = (lang === 'de') ? '/de/de' : '/de/' + lang;
+    document.cookie = 'googtrans=' + cookieVal + '; expires=' + expires.toUTCString() + '; path=/;';
+    document.cookie = 'googtrans=' + cookieVal + '; expires=' + expires.toUTCString() + '; path=/; domain=.' + location.hostname;
+}
+
+function getActiveLang() {
+    var match = document.cookie.match(/googtrans=\/de\/([a-z]+)/);
+    return (match && match[1] !== 'de') ? match[1] : 'de';
+}
+
+function markActiveLang() {
+    var active = getActiveLang();
+    document.querySelectorAll('.lang-btn').forEach(function(btn) {
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === active);
+    });
+}
+
+function switchLang(lang) {
+    setGTranslateCookie(lang);
+    /* Try to use Google Translate's internal switcher first (no reload) */
+    var select = document.querySelector('.goog-te-combo');
+    if (select) {
+        select.value = (lang === 'de') ? '' : lang;
+        select.dispatchEvent(new Event('change'));
+        markActiveLang();
+    } else {
+        /* Widget not yet ready — reload so cookie takes effect */
+        location.reload();
+    }
+}
+
+/* After GT widget loads, apply persisted language and mark active button */
+window.addEventListener('load', function() {
+    markActiveLang();
+    var active = getActiveLang();
+    if (active !== 'de') {
+        var select = document.querySelector('.goog-te-combo');
+        if (select && select.value !== active) {
+            select.value = active;
+            select.dispatchEvent(new Event('change'));
+        }
+    }
+});
 </script>
 <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
