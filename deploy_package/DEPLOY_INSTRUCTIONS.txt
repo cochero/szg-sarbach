@@ -319,7 +319,11 @@ SECURE_SSL_REDIRECT=False permanently.
   UPDATING THE APPLICATION
 ============================================================
 
-When new code is pushed to GitHub and you want to update:
+See deploy_package/UPDATE_FROM_GITHUB.txt for the full
+update guide including rollback, conflict resolution, and
+migration troubleshooting.
+
+Quick update (copy and paste as one block):
 
   cd /var/www/szg_sarbach
   source venv/bin/activate
@@ -331,6 +335,7 @@ When new code is pushed to GitHub and you want to update:
     python manage.py collectstatic --noinput
   sudo chown -R www-data:www-data /var/www/szg_sarbach
   sudo systemctl restart szg_sarbach
+  sudo systemctl status szg_sarbach
 
 
 ============================================================

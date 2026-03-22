@@ -1,0 +1,181 @@
+============================================================
+  SZG SARBACH — UPDATING AN EXISTING VPS DEPLOYMENT
+  (Pull latest code from GitHub)
+============================================================
+
+Use this guide every time new code has been pushed to GitHub
+and you want to update your live server.
+
+GitHub repository: https://github.com/cochero/szg-sarbach
+
+
+============================================================
+  QUICK CHECKLIST (run these in order)
+============================================================
+
+  1. SSH into your server
+  2. Pull latest code from GitHub
+  3. Install any new Python dependencies
+  4. Run database migrations
+  5. Collect static files
+  6. Fix file permissions
+  7. Restart the app
+
+Full commands below. Copy and paste the entire block:
+
+------------------------------------------------------------
+
+  cd /var/www/szg_sarbach
+  source venv/bin/activate
+
+  # 1. Pull latest code
+  git pull origin main
+
+  # 2. Install any new dependencies
+  pip install -r deploy_package/requirements.txt
+
+  # 3. Run database migrations (safe even if nothing changed)
+  DJANGO_SETTINGS_MODULE=szg_sarbach.settings_production \
+    python manage.py migrate
+
+  # 4. Collect static files
+  DJANGO_SETTINGS_MODULE=szg_sarbach.settings_production \
+    python manage.py collectstatic --noinput
+
+  # 5. Fix file ownership
+  sudo chown -R www-data:www-data /var/www/szg_sarbach
+
+  # 6. Restart the app
+  sudo systemctl restart szg_sarbach
+
+  # 7. Confirm it is running
+  sudo systemctl status szg_sarbach
+
+------------------------------------------------------------
+
+
+============================================================
+  WHEN TO ALSO RELOAD NGINX
+============================================================
+
+Nginx only needs restarting if you changed the Nginx config
+file (nginx_sarbach.conf). If you only updated Python/Django
+code or templates, restarting Gunicorn (Step 6 above) is
+enough.
+
+To reload Nginx:
+
+  sudo nginx -t
+  sudo systemctl reload nginx
+
+
+============================================================
+  WHEN TO RELOAD FIXTURES (DATABASE CONTENT)
+============================================================
+
+The fixture file (fixtures/initial_data.json) holds default
+content: departments, banners, site settings, staff accounts.
+
+ONLY reload fixtures if you specifically want to reset the
+database to the default content — this will OVERWRITE any
+content you have added or edited through the admin panel.
+
+  DJANGO_SETTINGS_MODULE=szg_sarbach.settings_production \
+    python manage.py loaddata fixtures/initial_data.json
+
+If you have new fixture data that you want to MERGE (not
+overwrite), discuss with your developer first to ensure
+primary keys do not conflict.
+
+
+============================================================
+  CHECKING THE APP AFTER UPDATE
+============================================================
+
+After restarting, verify the following:
+
+  1. Homepage loads in German
+       https://yourdomain.com
+
+  2. Admin panel accessible
+       https://yourdomain.com/panel/
+
+  3. No 502 errors
+       If you see 502: sudo journalctl -u szg_sarbach -n 50
+
+  4. Static files load (CSS/images appear correctly)
+       If broken: re-run collectstatic (Step 4 above)
+
+
+============================================================
+  IF GIT PULL FAILS (conflict or dirty working tree)
+============================================================
+
+If git pull complains about local changes that conflict with
+incoming changes, stash your local edits first:
+
+  git stash
+  git pull origin main
+  git stash pop
+
+If you do not care about local changes and want to force-reset
+to match GitHub exactly:
+
+  git fetch origin
+  git reset --hard origin/main
+
+WARNING: git reset --hard discards ALL local file changes
+permanently. Only run this if you are sure.
+
+
+============================================================
+  IF YOU GET A MIGRATION ERROR
+============================================================
+
+A migration error means new database schema changes could not
+be applied automatically. Steps to investigate:
+
+  DJANGO_SETTINGS_MODULE=szg_sarbach.settings_production \
+    python manage.py showmigrations
+
+Look for any migrations marked [ ] (unapplied). Then:
+
+  DJANGO_SETTINGS_MODULE=szg_sarbach.settings_production \
+    python manage.py migrate --verbosity 2
+
+If the error persists, contact your developer with the full
+error message from the command above.
+
+
+============================================================
+  ROLLBACK (if the update broke something)
+============================================================
+
+To roll back to the previous working version, find the last
+good commit hash and reset to it:
+
+  # View recent commits
+  git log --oneline -10
+
+  # Reset to a previous commit (replace HASH with the commit ID)
+  git reset --hard HASH
+
+  # Re-run static files and restart
+  source venv/bin/activate
+  DJANGO_SETTINGS_MODULE=szg_sarbach.settings_production \
+    python manage.py collectstatic --noinput
+  sudo chown -R www-data:www-data /var/www/szg_sarbach
+  sudo systemctl restart szg_sarbach
+
+
+============================================================
+  USEFUL LOG COMMANDS
+============================================================
+
+  Live app log:       sudo journalctl -u szg_sarbach -f
+  Last 50 log lines:  sudo journalctl -u szg_sarbach -n 50
+  Gunicorn errors:    sudo tail -f /var/log/gunicorn/error.log
+  Nginx errors:       sudo tail -f /var/log/nginx/error.log
+  App status:         sudo systemctl status szg_sarbach
+
+============================================================
